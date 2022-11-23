@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
-    internal class GeoPosition
-    {
-    }
+    public record GeoPosition(double Latitude, double Longitude, Elevation Elevation);
+    
 }

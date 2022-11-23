@@ -6,5 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
-    public record Metric(double Value, string Unit, int UnitType);
+    internal class DataRepo
+    {
+    }
 }

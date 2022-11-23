@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
-    internal class Elevation
-    {
-    }
+    public record Elevation(Metric Metric, Imperial Imperial);
+    
 }

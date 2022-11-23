@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace WeatherApp.CityAllInformation
 {
-    internal class TimeZone
-    {
-    }
+    public record TimeZone(string Code, string Name, int GmtOffset, bool IsDaylightSaing, object NextOffsetChange);
 }

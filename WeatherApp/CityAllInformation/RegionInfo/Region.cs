@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
-    internal class Region
-    {
-    }
+    public record Region(string ID, string LocalizedName, string EnglishName);
+    
 }

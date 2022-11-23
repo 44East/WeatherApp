@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
-    internal class SupplementalAdminAreas
-    {
-    }
+    public record SupplementalAdminAreas(int Level, string LocalizedName, string EnglishName);
 }

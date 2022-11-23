@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace WeatherApp.CityAllInformation
 {
-    internal class AdministartiveArea
-    {
-    }
+    public record AdministartiveArea(string ID, string LocalizedName,string EnglishName, int Level,string LocalizedType, string EnglishType, string CountryID);
 }

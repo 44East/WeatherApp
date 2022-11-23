@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
-    internal class Imperial
-    {
-    }
+    public record Imperial(double Value, string Unit, int UnitType);
 }
