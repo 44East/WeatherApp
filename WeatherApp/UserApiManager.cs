@@ -8,15 +8,12 @@ using System.Xml.Serialization;
 
 namespace WeatherApp
 {
-    internal class UserApiManager
+    public class UserApiManager
     {
-        public UserApiManager()
-        {
-            userApiList = new ObservableCollection<UserApi>();
-        }
+        
 
 
-        public ObservableCollection<UserApi> userApiList;
+        public ObservableCollection<UserApi> userApiList { get; private set; }
         public void WriteUserApiToLocalStorage(string formalUserAPi)
         {
             UserApi userApiProp = new UserApi { UserApiProperty = formalUserAPi };
@@ -38,10 +35,6 @@ namespace WeatherApp
                 {
                     userApiList = xmlSerializer.Deserialize(sr) as ObservableCollection<UserApi>;
                 }
-            }
-            catch(FileNotFoundException ex)
-            {
-                Console.WriteLine(ex.Message);
             }
             catch (Exception ex)
             {

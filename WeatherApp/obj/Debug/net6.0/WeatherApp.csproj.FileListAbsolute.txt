@@ -1,0 +1,15 @@
+D:\C#\Git\WeatherApp\WeatherApp\bin\Debug\net6.0\WeatherApp.exe
+D:\C#\Git\WeatherApp\WeatherApp\bin\Debug\net6.0\WeatherApp.deps.json
+D:\C#\Git\WeatherApp\WeatherApp\bin\Debug\net6.0\WeatherApp.runtimeconfig.json
+D:\C#\Git\WeatherApp\WeatherApp\bin\Debug\net6.0\WeatherApp.dll
+D:\C#\Git\WeatherApp\WeatherApp\bin\Debug\net6.0\WeatherApp.pdb
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.csproj.AssemblyReference.cache
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.GeneratedMSBuildEditorConfig.editorconfig
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.AssemblyInfoInputs.cache
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.AssemblyInfo.cs
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.csproj.CoreCompileInputs.cache
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.dll
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\refint\WeatherApp.dll
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.pdb
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\WeatherApp.genruntimeconfig.cache
+D:\C#\Git\WeatherApp\WeatherApp\obj\Debug\net6.0\ref\WeatherApp.dll
