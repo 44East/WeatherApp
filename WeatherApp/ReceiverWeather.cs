@@ -34,15 +34,18 @@ namespace WeatherApp
 
             bool ifNotExist = false;
             string cityKey = null;
-            int cityNum = 0;
+            int cityNum;
+            Console.Write("Номер города для просмотра: ");
+            while (!int.TryParse(Console.ReadLine(), out cityNum))
+            {
+                Console.WriteLine("Ввод должен содержать только числовой набор символов!\nНомер города для просмотра: ");
+            }
             do
             {
+                
                 ifNotExist = default;
-                Console.Write("Номер города для просмотра: ");
-                while(!int.TryParse(Console.ReadLine(), out cityNum));
-                {
-                    Console.WriteLine("Ввод должен содержать только числовой набор символов!\nНомер города для просмотра: ");
-                }
+                
+                
                 if (cityNum < 0|| cityNum > SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather.Count - 1)
                 {
                     Console.WriteLine("Такого номера нет. Попробуйте еще раз.");

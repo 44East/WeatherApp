@@ -7,42 +7,42 @@ using TimeZone = WeatherApp.TimeZone;
 
 namespace WeatherApp
 {
-    public class RootBasicCityInfo
-    {
-        public int Version { get; set; }
-        public string Key { get; set; }
-        public string Type { get; set; }
-        public int Rank { get; set; }
-        public string LocalizedName { get; set; }
-        public string EnglishName { get; set; }
-        public string PrimaryPostalCode { get; set; }
-        public Region Region { get; set; }
-        public Country Country { get; set; }
-        public AdministrativeArea AdministrativeArea { get; set; }
-        public TimeZone TimeZone { get; set; }
-        public GeoPosition GeoPosition { get; set; }
-        public bool IsAlias { get; set; }
-        public List<SupplementalAdminAreas> SupplementalAdminAreas { get; set; }
-        public List<string> DataSets { get; set; }
-    }
+    //public class RootBasicCityInfo
+    //{
+    //    public int Version { get; set; }
+    //    public string Key { get; set; }
+    //    public string Type { get; set; }
+    //    public int Rank { get; set; }
+    //    public string LocalizedName { get; set; }
+    //    public string EnglishName { get; set; }
+    //    public string PrimaryPostalCode { get; set; }
+    //    public Region Region { get; set; }
+    //    public Country Country { get; set; }
+    //    public AdministrativeArea AdministrativeArea { get; set; }
+    //    public TimeZone TimeZone { get; set; }
+    //    public GeoPosition GeoPosition { get; set; }
+    //    public bool IsAlias { get; set; }
+    //    public List<SupplementalAdminAreas> SupplementalAdminAreas { get; set; }
+    //    public List<string> DataSets { get; set; }
+    //}
 
-    //public record RootBasicCityInfo(
-    //    int Version,
-    //    string Key,
-    //    string Type,
-    //    int Rank,
-    //    string LocalizedName,
-    //    string EnglishName,
-    //    string PrimaryPostalCode,
-    //    bool IsAlias,
-    //    Region Region,
-    //    Country Country,
-    //    AdministartiveArea AdministrativeArea,
-    //    TimeZone TimeZone,
-    //    GeoPosition GeoPosition,
-    //    List<SupplementalAdminAreas> SupplementalAdminAreas,
-    //    List<string> DataSets
-    //    );
+    public record RootBasicCityInfo(
+        int Version,
+        string Key,
+        string Type,
+        int Rank,
+        string LocalizedName,
+        string EnglishName,
+        string PrimaryPostalCode,
+        bool IsAlias,
+        Region Region,
+        Country Country,
+        AdministrativeArea AdministrativeArea,
+        TimeZone TimeZone,
+        GeoPosition GeoPosition,
+        List<SupplementalAdminAreas> SupplementalAdminAreas,
+        List<string> DataSets
+        );
     public record TimeZone(string Code, string Name, double GmtOffset, bool IsDaylightSaing, object NextOffsetChange);
     public record SupplementalAdminAreas(int Level, string LocalizedName, string EnglishName);
     public record Region(string ID, string LocalizedName, string EnglishName);

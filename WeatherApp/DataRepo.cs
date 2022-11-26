@@ -11,8 +11,17 @@ namespace WeatherApp
 {
     public class DataRepo
     {
-        
-        ObservableCollection<RootBasicCityInfo> findCitiesColection = new ObservableCollection<RootBasicCityInfo>();
+        public DataRepo()
+        {
+            ListOfCitiesForMonitoringWeather = new ObservableCollection<RootBasicCityInfo>();
+            WheatherInformation = new ObservableCollection<RootWeather>();
+            findCitiesColection = new ObservableCollection<RootBasicCityInfo>();
+        }
+
+
+
+
+        ObservableCollection<RootBasicCityInfo> findCitiesColection;
         public ObservableCollection<RootBasicCityInfo> ListOfCitiesForMonitoringWeather { get; private set; }
         public ObservableCollection<RootWeather> WheatherInformation { get; private set; }
 
@@ -56,7 +65,7 @@ namespace WeatherApp
         }
         public void ReadListOfCityMonitoring()
         {
-            //XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<RootBasicCityInfo>));
+            
             
 
             using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
@@ -64,7 +73,7 @@ namespace WeatherApp
             {
                 var prepareString = sr.ReadToEnd();
                 ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
-                //ListOfCitiesForMonitoringWeather = xmlSerializer.Deserialize(sr) as ObservableCollection<RootBasicCityInfo>;
+                
             }
             catch(FileNotFoundException ex)
             {
@@ -74,16 +83,17 @@ namespace WeatherApp
             {
                 Console.WriteLine(ex.Message);
             }
+            sr.Dispose();
         }
 
         private void WriteListOfCityMonitoring()
         {
-            //XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<RootBasicCityInfo>));
 
             using StreamWriter sw = new StreamWriter("RootBasicCityInfo.json");
-            using Stream stream = sw.BaseStream;
+            Stream stream = sw.BaseStream;
             JsonSerializer.Serialize<ObservableCollection<RootBasicCityInfo>>(stream,ListOfCitiesForMonitoringWeather);
-            //xmlSerializer.Serialize(sw, ListOfCitiesForMonitoringWeather);
+            
+            sw.Dispose();
         }
 
         public void PrintReceivedCities(ObservableCollection<RootBasicCityInfo> formalListCities)
@@ -115,7 +125,7 @@ namespace WeatherApp
                 Console.WriteLine("Похоже вы ошиблись цифрой.\n");
                 Console.WriteLine(ex.Message);
             }
-
+            WriteListOfCityMonitoring();
         }
     }
 }

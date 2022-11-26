@@ -20,28 +20,23 @@ namespace WeatherApp
             DataRepo= new DataRepo();
         }
 
-        //public SearcherCity()
-        //{
-        //    apiManager= new UserApiManager();
-        //    dataRepo= new DataRepo();
-        //}
-        public async void GettingListOfCitesOnRequest(string cityName)
+        
+        public async void GettingListOfCitesOnRequest(string cityName, string searchLanguage)
         {
             string apiKey = ApiManager.userApiList.FirstOrDefault().UserApiProperty;
 
             try
             {
-                string jsonOnWeb = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={cityName}";
+                string jsonOnWeb = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={cityName}&language={searchLanguage}";
                 HttpClient httpClient = new HttpClient();
                 
                 using HttpResponseMessage response = httpClient.GetAsync(jsonOnWeb).Result;
                 using HttpContent content = response.Content;
                 
                 string prepareString = await content.ReadAsStringAsync();
-                var rootDataCity = JsonSerializer.Deserialize<RootBasicCityInfo>(prepareString);
-                ObservableCollection<RootBasicCityInfo> rbci = new ObservableCollection<RootBasicCityInfo>();
-                rbci.Add(rootDataCity);
-                //ObservableCollection<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
+
+                
+                ObservableCollection<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
 
                 DataRepo.PrintReceivedCities(rbci);
 

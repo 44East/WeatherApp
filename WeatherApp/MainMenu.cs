@@ -47,9 +47,11 @@ namespace WeatherApp
                         receiverWeather.SearcherCity.ApiManager.WriteUserApiToLocalStorage(api);
                         break;
                     case "2":
-                        Write("Введите название города(ru, en): ");
+                        Write("Язык поиска(ru, en): ");
+                        var searchLanguage = ReadLine().Trim().ToLowerInvariant();
+                        Write("\nВведите название города: ");
                         var nameOfCity = ReadLine().Trim();
-                        receiverWeather.SearcherCity.GettingListOfCitesOnRequest(nameOfCity);
+                        receiverWeather.SearcherCity.GettingListOfCitesOnRequest(nameOfCity, searchLanguage);
                         break;
                     case "3":
                         receiverWeather.GetWeatherDataFromServer();
