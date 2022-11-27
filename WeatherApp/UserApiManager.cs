@@ -10,7 +10,10 @@ namespace WeatherApp
 {
     public class UserApiManager
     {
-        
+        public UserApiManager()
+        {
+            userApiList = new ObservableCollection<UserApi>();
+        }
 
 
         public ObservableCollection<UserApi> userApiList { get; private set; }
@@ -38,6 +41,7 @@ namespace WeatherApp
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Вы еще не добавили ни одного ключа доступа, воспользуйтесь соответствующим пунктом меню!");
                 Console.WriteLine(ex.Message);
             }
         }
