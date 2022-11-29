@@ -14,60 +14,18 @@ namespace WeatherApp
         public DataRepo()
         {
             ListOfCitiesForMonitoringWeather = new ObservableCollection<RootBasicCityInfo>();
-            WheatherInformation = new ObservableCollection<RootWeather>();
-            findCitiesColection = new ObservableCollection<RootBasicCityInfo>();
         }
 
 
 
 
-        ObservableCollection<RootBasicCityInfo> findCitiesColection;
-        public ObservableCollection<RootBasicCityInfo> ListOfCitiesForMonitoringWeather { get; private set; }
-        public ObservableCollection<RootWeather> WheatherInformation { get; private set; }
-
-        public void ReadDataFromcalStorage()
-        {
-            string prepareString = null;
-            ObservableCollection<RootBasicCityInfo> rbci;
-
-            int numberInList = 0;
-            string pattern = "=====\n" + "Номер в списке: {0}\n" + "Название в оригинале {1}\n" +
-                             "В переводе: {2}\n" + "Страна: {3}\n" + "Административный округ: {4}\n" +
-                             "Тип: {5}\n" + "====\n";
-            using (StreamReader sr = new StreamReader("SimpleData.json"))
-            {
-                prepareString= sr.ReadToEnd();
-            }
-            rbci = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
-            foreach (var item in rbci)
-            {
-                Console.WriteLine(pattern, numberInList.ToString(), item.EnglishName, 
-                                  item.LocalizedName,item.Country.LoacalizedName, 
-                                  item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType);
-                numberInList++;
-            }
-
-        }
-        public void ReadWheatherData()
-        {
-            string prepareString = null;
-            RootWeather weatherData;
-
-            using StreamReader sr = new StreamReader("WeatherExample.json");
-            prepareString = sr.ReadToEnd();
-
-            weatherData = JsonSerializer.Deserialize<RootWeather>(prepareString);
-
-            foreach (var item in weatherData.DailyForecasts)
-            {
-                Console.WriteLine(item.Temperature.Maximum.Value + " " + item.Temperature.Minimum.Value);
-            }
-        }
+        /// <summary>
+        /// Временно хранит прочитанные города из файла с локального диска, для дальнейшего вывода по ним погоды. 
+        /// </summary>
+        public ObservableCollection<RootBasicCityInfo> ListOfCitiesForMonitoringWeather { get; private set; }   
+        
         public void ReadListOfCityMonitoring()
-        {
-            
-            
-
+        {        
             using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
             try
             {
@@ -77,6 +35,7 @@ namespace WeatherApp
             }
             catch(FileNotFoundException ex)
             {
+                Console.WriteLine("Похоже файл с сохраненными городами удален, пермещен или еще не был создан.");
                 Console.WriteLine(ex.Message);
             }
             catch(Exception ex)
@@ -94,6 +53,10 @@ namespace WeatherApp
             JsonSerializer.Serialize<ObservableCollection<RootBasicCityInfo>>(stream,ListOfCitiesForMonitoringWeather);
             
             sw.Dispose();
+        }
+        public void RemoveCityFromSavedList()
+        {
+
         }
 
         public void PrintReceivedCities(ObservableCollection<RootBasicCityInfo> formalListCities)

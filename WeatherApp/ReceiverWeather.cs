@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+
 namespace WeatherApp
 {
     public class ReceiverWeather
@@ -23,9 +24,9 @@ namespace WeatherApp
             + "Тип: {5}\n" + "====\n";
             int numberInList = 0;
 
-            foreach (var item in  SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather)
+            foreach (var item in SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather)
             {
-                Console.WriteLine(pattern, numberInList.ToString(),
+                Console.WriteLine(pattern, SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather.IndexOf(item) + 1,
                 item.EnglishName, item.LocalizedName, item.Country.LoacalizedName,
                 item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType);
                 numberInList++;
@@ -33,28 +34,29 @@ namespace WeatherApp
             }
 
             bool ifNotExist = false;
-            string cityKey = null;
+
             int cityNum;
             Console.Write("Номер города для просмотра: ");
-            while (!int.TryParse(Console.ReadLine(), out cityNum))
-            {
-                Console.WriteLine("Ввод должен содержать только числовой набор символов!\nНомер города для просмотра: ");
-            }
             do
             {
-                
+                while (!int.TryParse(Console.ReadLine(), out cityNum))
+                {
+                    Console.WriteLine("Ввод должен содержать только числовой набор символов!\nНомер города для просмотра: ");
+                }
+
+
                 ifNotExist = default;
-                
-                
-                if (cityNum < 0|| cityNum > SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather.Count - 1)
+
+                if (cityNum < 1 || cityNum > SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather.Count)
                 {
                     Console.WriteLine("Такого номера нет. Попробуйте еще раз.");
-                    ifNotExist = true;  
+                    ifNotExist = true;
                 }
             }
             while (ifNotExist);
 
-            cityKey = SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather[cityNum].Key;
+            var cityKey = SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather[cityNum - 1].Key;
+            var cityName = SearcherCity.DataRepo.ListOfCitiesForMonitoringWeather[cityNum - 1].LocalizedName;
 
             string apiKey = SearcherCity.ApiManager.userApiList?.FirstOrDefault().UserApiProperty;
 
@@ -66,15 +68,15 @@ namespace WeatherApp
             string receivedResult = await httpContent.ReadAsStringAsync();
 
             RootWeather rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedResult);
-            
-            string patternWeather = "=====\n" + "Дата: {0}\n" + "Температура минимальная: {1}\n"
+
+            string patternWeather = "=====\n" + "Город: {5}\n" + "Дата: {0}\n" + "Температура минимальная: {1}\n"
             + "Температура максимальная: {2}\n" + "Примечание на день: {3}\n" + "Примечание на ночь: {4}\n" + "====\n";
 
 
             foreach (var item in rootWeather.DailyForecasts)
             {
                 Console.WriteLine(patternWeather, item.Date, item.Temperature.Minimum.Value,
-                item.Temperature.Maximum.Value, item.Day.IconPhrase, item.Night.IconPhrase);
+                item.Temperature.Maximum.Value, item.Day.IconPhrase, item.Night.IconPhrase, cityName);
 
             }
 
