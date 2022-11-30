@@ -14,8 +14,10 @@ namespace WeatherApp
 
         public UserApiManager ApiManager { get; private set; }
         public DataRepo DataRepo {get; private set;}
+        private TextMessages textMessages;
         public SearcherCity()
         {
+            textMessages= new TextMessages();
             ApiManager= new UserApiManager();
             DataRepo= new DataRepo();
         }
@@ -24,7 +26,6 @@ namespace WeatherApp
         public async void GettingListOfCitesOnRequest(string cityName, string searchLanguage)
         {
             string apiKey = ApiManager.userApiList.FirstOrDefault().UserApiProperty;
-
             try
             {
                 string jsonOnWeb = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={cityName}&language={searchLanguage}";
@@ -34,25 +35,49 @@ namespace WeatherApp
                 using HttpContent content = response.Content;
                 
                 string prepareString = await content.ReadAsStringAsync();
-
                 
                 ObservableCollection<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
 
                 DataRepo.PrintReceivedCities(rbci);
-
-
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Неполучилось отобразить запрашиваемый город."
-                + "Возможные причины: \n" +
-                "* Неправильно указано название города\n"
-                + "* Нет доступа к интернету\n"
-                + "Подробнее ниже: \n"
-                + ex.Message);
+                Console.WriteLine(textMessages.ErorrsBySearch + ex.Message);
+            }
+        }
+        public void RemoveCityFromList() => DataRepo.RemoveCityFromSavedList(GetCurrentCity());
+        public RootBasicCityInfo GetCurrentCity()
+        {
+            foreach (var item in DataRepo.ListOfCitiesForMonitoringWeather)
+            {
+                Console.WriteLine(textMessages.PatternOfCity, DataRepo.ListOfCitiesForMonitoringWeather.IndexOf(item) + 1,
+                item.EnglishName, item.LocalizedName, item.Country.LoacalizedName,
+                item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType);
 
             }
+
+            bool ifNotExist = false;
+
+            int cityNum;
+            Console.Write(textMessages.GetCityNum);
+            do
+            {
+                while (!int.TryParse(Console.ReadLine(), out cityNum))
+                {
+                    Console.WriteLine(textMessages.IntParseError + textMessages.GetCityNum);
+                }
+
+
+                ifNotExist = default;
+
+                if (cityNum < 1 || cityNum > DataRepo.ListOfCitiesForMonitoringWeather.Count)
+                {
+                    Console.WriteLine(textMessages.CityNoExist);
+                    ifNotExist = true;
+                }
+            }
+            while (ifNotExist);
+            return DataRepo.ListOfCitiesForMonitoringWeather[cityNum - 1];
         }
     }
 }

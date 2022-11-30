@@ -12,10 +12,11 @@ namespace WeatherApp
         //private UserApiManager userApiManager;
         //private SearcherCity searcherCity;
         private ReceiverWeather receiverWeather;
+        private TextMessages textMessages;
 
         public MainMenu()
         {
-           
+            textMessages = new TextMessages();  
             receiverWeather = new ReceiverWeather();
             receiverWeather.SearcherCity.ApiManager.ReadUserApiFromLocalStorage();
             receiverWeather.SearcherCity.DataRepo.ReadListOfCityMonitoring();
@@ -28,17 +29,9 @@ namespace WeatherApp
             string? answer;
             while(canExit)
             {
-                WriteLine("=================================================");
-                WriteLine("|Добро пожаловать в Погоду                      |");
-                WriteLine("|Доступные действия:                            |\n" +
-                          "=================================================");
-                WriteLine("|1 - Ввести API                                 |\n" +
-                          "|2 - Добавить город                             |\n" +
-                          "|3 - Посмотреть погоду из сохраненныех городов  |\n" +
-                          "|q - Выйти из программы                         |");
-                WriteLine("=================================================\n");
+                WriteLine(textMessages.OpeningMenu);
 
-                Write("Ваш выбор: ");
+                Write(textMessages.GetChoice);
                 answer = ReadLine()?.ToLowerInvariant().Trim();
                 switch(answer)
                 {
@@ -47,21 +40,24 @@ namespace WeatherApp
                         receiverWeather.SearcherCity.ApiManager.WriteUserApiToLocalStorage(api);
                         break;
                     case "2":
-                        Write("Язык поиска(ru, en): ");
+                        Write(textMessages.ChooseLang);
                         var searchLanguage = ReadLine().Trim().ToLowerInvariant();
-                        Write("\nВведите название города: ");
+                        Write(textMessages.GetCityName);
                         var nameOfCity = ReadLine().Trim();
                         receiverWeather.SearcherCity.GettingListOfCitesOnRequest(nameOfCity, searchLanguage);
                         break;
                     case "3":
                         receiverWeather.GetWeatherDataFromServer();
                         break;
+                    case "4":
+                        receiverWeather.SearcherCity.RemoveCityFromList();
+                        break;
                     case "q":
                     case "й":
                         canExit = false;
                         break;
                     default:
-                        WriteLine("Некорректный ввод!");
+                        WriteLine(textMessages.IncorrectInput);
                         break;
                 }
 

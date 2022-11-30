@@ -11,8 +11,10 @@ namespace WeatherApp
 {
     public class DataRepo
     {
+        private TextMessages textMessages;
         public DataRepo()
         {
+            textMessages= new TextMessages();
             ListOfCitiesForMonitoringWeather = new ObservableCollection<RootBasicCityInfo>();
         }
 
@@ -35,7 +37,7 @@ namespace WeatherApp
             }
             catch(FileNotFoundException ex)
             {
-                Console.WriteLine("Похоже файл с сохраненными городами удален, пермещен или еще не был создан.");
+                Console.WriteLine(textMessages.CityFileDoesntExist);
                 Console.WriteLine(ex.Message);
             }
             catch(Exception ex)
@@ -54,38 +56,34 @@ namespace WeatherApp
             
             sw.Dispose();
         }
-        public void RemoveCityFromSavedList()
+        public void RemoveCityFromSavedList(RootBasicCityInfo rootBasicCityInfo)
         {
-
+            ListOfCitiesForMonitoringWeather.Remove(rootBasicCityInfo);
+            WriteListOfCityMonitoring();
         }
 
         public void PrintReceivedCities(ObservableCollection<RootBasicCityInfo> formalListCities)
         {
-            string pattern = "=====\n" + "Номер в списке: {0}\n" + "Название в оригинале: {1}\n"
-            + "В переводе:  {2} \n" + "Страна: {3}\n" + "Административный округ: {4}\n"
-            + "Тип: {5}\n" + "====\n";
-            int numberInList = 0;
-
             foreach (var item in formalListCities)
             {
-                Console.WriteLine(pattern, numberInList.ToString(), item.EnglishName,
+                Console.WriteLine(textMessages.PatternOfCity, formalListCities.IndexOf(item) + 1, item.EnglishName,
                                   item.LocalizedName, item.Country.LoacalizedName,
                                   item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType);
-                numberInList++;
+                
             }
-            Console.Write("Номер какого города добавить в мониторинг: ");
+            Console.Write(textMessages.SaveCityToMonitor);
             int cityNum;
             while (!int.TryParse(Console.ReadLine(), out cityNum))
             {
-                Console.WriteLine("Ввод может содержать только числовой набор символов!");
+                Console.WriteLine(textMessages.IntParseError);
             }
             try
             {
-                ListOfCitiesForMonitoringWeather.Add(formalListCities[cityNum]);
+                ListOfCitiesForMonitoringWeather.Add(formalListCities[cityNum - 1]);
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Похоже вы ошиблись цифрой.\n");
+                Console.WriteLine(textMessages.IncorrectInput);
                 Console.WriteLine(ex.Message);
             }
             WriteListOfCityMonitoring();

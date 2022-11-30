@@ -10,8 +10,10 @@ namespace WeatherApp
 {
     public class UserApiManager
     {
+        private TextMessages textMessages;
         public UserApiManager()
         {
+            textMessages= new TextMessages();
             userApiList = new ObservableCollection<UserApi>();
         }
 
@@ -41,7 +43,7 @@ namespace WeatherApp
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Вы еще не добавили ни одного ключа доступа, воспользуйтесь соответствующим пунктом меню!");
+                Console.WriteLine(textMessages.ApiFileDoesntExist);
                 Console.WriteLine(ex.Message);
             }
         }
