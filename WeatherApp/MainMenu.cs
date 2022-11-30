@@ -9,8 +9,12 @@ namespace WeatherApp
 {
     public class MainMenu
     {
+        
         private ReceiverWeather receiverWeather;
         private TextMessages textMessages;
+        /// <summary>
+        /// Создает все необходимые для работы экземпляры классов, запуск приложения
+        /// </summary>
         public MainMenu()
         {
             textMessages = new TextMessages();  
@@ -20,6 +24,9 @@ namespace WeatherApp
             GetTheMainMenu();
             
         }
+        /// <summary>
+        /// Вывод главного меню поддерживает числовой выбор пунктов(в строковом формате)
+        /// </summary>
         private void GetTheMainMenu()
         {
             bool canExit = true;

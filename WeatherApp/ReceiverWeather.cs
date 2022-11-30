@@ -11,7 +11,6 @@ namespace WeatherApp
     public class ReceiverWeather
     {
         private TextMessages textMessages;
-        private RootWeather rootWeather;
         public ReceiverWeather()
         {
             textMessages = new TextMessages();
@@ -21,7 +20,7 @@ namespace WeatherApp
         /// <summary>
         /// Метод запрашивает API ключ доступа к серверу и уникальный номер сохраненного города, если пара ключ номер приняты сервером
         /// Выводит погоду на 5 дней по выбранному городу
-        /// Если список городов пуст или API ключ недоступен, выводится соответствующее сообение и происходит выход из метода
+        /// Если список городов пуст или API ключ недоступен, выводится соответствующее сообщение по каждому событию и происходит выход из метода
         /// </summary>
         public async Task GetWeatherDataFromServer()
         {
@@ -45,7 +44,7 @@ namespace WeatherApp
 
             string receivedResult = await httpContent.ReadAsStringAsync();
 
-            rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedResult);
+            var rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedResult);
 
             foreach (var item in rootWeather.DailyForecasts)
             {

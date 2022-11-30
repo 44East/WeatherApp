@@ -17,10 +17,6 @@ namespace WeatherApp
             textMessages= new TextMessages();
             ListOfCitiesForMonitoringWeather = new ObservableCollection<RootBasicCityInfo>();
         }
-
-
-
-
         /// <summary>
         /// Временно хранит прочитанные города из файла с локального диска, для дальнейшего вывода по ним погоды. 
         /// </summary>
@@ -49,8 +45,7 @@ namespace WeatherApp
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-            
+            }           
             
         }
         /// <summary>

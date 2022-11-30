@@ -51,7 +51,7 @@ namespace WeatherApp
             }
         }
         /// <summary>
-        /// Удаляет город из списка через экземпляр хранения данных и коллекций 
+        /// Удаляет город из списка через экземпляр DataRepo 
         /// </summary>
         public void RemoveCityFromList() => DataRepo.RemoveCityFromSavedList(GetCurrentCity());
         /// <summary>
