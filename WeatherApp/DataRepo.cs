@@ -15,12 +15,12 @@ namespace WeatherApp
         public DataRepo()
         {
             textMessages= new TextMessages();
-            ListOfCitiesForMonitoringWeather = new ObservableCollection<RootBasicCityInfo>();
+            ListOfCitiesForMonitoringWeather = new List<RootBasicCityInfo>();
         }
         /// <summary>
         /// Временно хранит прочитанные города из файла с локального диска, для дальнейшего вывода по ним погоды. 
         /// </summary>
-        public ObservableCollection<RootBasicCityInfo> ListOfCitiesForMonitoringWeather { get; private set; }   
+        public List<RootBasicCityInfo> ListOfCitiesForMonitoringWeather { get; private set; }   
         /// <summary>
         /// При запуске читает локальнй файл сохраненных городов и записывает их в коллекцию, если файл еще не создан или
         /// удален/перемещен, то метод создает пустой файл
@@ -32,7 +32,7 @@ namespace WeatherApp
             {
                 using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
                 var prepareString = sr.ReadToEnd();
-                ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
+                ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
                 sr.Dispose(); 
             }
             catch(FileNotFoundException ex)
@@ -63,7 +63,7 @@ namespace WeatherApp
 
             using StreamWriter sw = new StreamWriter("RootBasicCityInfo.json");
             Stream stream = sw.BaseStream;
-            JsonSerializer.Serialize<ObservableCollection<RootBasicCityInfo>>(stream,ListOfCitiesForMonitoringWeather);
+            JsonSerializer.Serialize<List<RootBasicCityInfo>>(stream,ListOfCitiesForMonitoringWeather);
             
             sw.Dispose();
         }
@@ -86,7 +86,7 @@ namespace WeatherApp
         /// необходимо сохранить в файл
         /// </summary>
         /// <param name="formalListCities"></param>
-        public void PrintReceivedCities(ObservableCollection<RootBasicCityInfo> formalListCities)
+        public void PrintReceivedCities(List<RootBasicCityInfo> formalListCities)
         {
             foreach (var item in formalListCities)
             {

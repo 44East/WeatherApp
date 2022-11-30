@@ -41,7 +41,7 @@ namespace WeatherApp
                 
                 string prepareString = await content.ReadAsStringAsync();
                 
-                ObservableCollection<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
+                List<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
 
                 DataRepo.PrintReceivedCities(rbci);
             }
