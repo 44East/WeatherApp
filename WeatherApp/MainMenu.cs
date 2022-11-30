@@ -9,11 +9,8 @@ namespace WeatherApp
 {
     public class MainMenu
     {
-        //private UserApiManager userApiManager;
-        //private SearcherCity searcherCity;
         private ReceiverWeather receiverWeather;
         private TextMessages textMessages;
-
         public MainMenu()
         {
             textMessages = new TextMessages();  

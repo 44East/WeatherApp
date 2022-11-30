@@ -7,25 +7,25 @@ using TimeZone = WeatherApp.TimeZone;
 
 namespace WeatherApp
 {
-    //public class RootBasicCityInfo
-    //{
-    //    public int Version { get; set; }
-    //    public string Key { get; set; }
-    //    public string Type { get; set; }
-    //    public int Rank { get; set; }
-    //    public string LocalizedName { get; set; }
-    //    public string EnglishName { get; set; }
-    //    public string PrimaryPostalCode { get; set; }
-    //    public Region Region { get; set; }
-    //    public Country Country { get; set; }
-    //    public AdministrativeArea AdministrativeArea { get; set; }
-    //    public TimeZone TimeZone { get; set; }
-    //    public GeoPosition GeoPosition { get; set; }
-    //    public bool IsAlias { get; set; }
-    //    public List<SupplementalAdminAreas> SupplementalAdminAreas { get; set; }
-    //    public List<string> DataSets { get; set; }
-    //}
-
+    /// <summary>
+    /// Базовая структура данных по городам которую возвращает сервер
+    /// https://www.accuweather.com/
+    /// </summary>
+    /// <param name="Version"></param>
+    /// <param name="Key"></param>
+    /// <param name="Type"></param>
+    /// <param name="Rank"></param>
+    /// <param name="LocalizedName"></param>
+    /// <param name="EnglishName"></param>
+    /// <param name="PrimaryPostalCode"></param>
+    /// <param name="IsAlias"></param>
+    /// <param name="Region"></param>
+    /// <param name="Country"></param>
+    /// <param name="AdministrativeArea"></param>
+    /// <param name="TimeZone"></param>
+    /// <param name="GeoPosition"></param>
+    /// <param name="SupplementalAdminAreas"></param>
+    /// <param name="DataSets"></param>
     public record RootBasicCityInfo(
         int Version,
         string Key,

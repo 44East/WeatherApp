@@ -6,6 +6,25 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
+    /// <summary>
+    /// Набор текстовых сообщений, при расширении приложении или добавления других языков, весь текстовый массив собран в одном месте
+    /// </summary>
+    /// <param name="PatternOfCity"></param>
+    /// <param name="PatternOfWeather"></param>
+    /// <param name="ErorrsBySearch"></param>
+    /// <param name="ApiFileDoesntExist"></param>
+    /// <param name="CityFileDoesntExist"></param>
+    /// <param name="GetCityNum"></param>
+    /// <param name="IntParseError"></param>
+    /// <param name="CityNoExist"></param>
+    /// <param name="OpeningMenu"></param>
+    /// <param name="GetChoice"></param>
+    /// <param name="ChooseLang"></param>
+    /// <param name="GetCityName"></param>
+    /// <param name="IncorrectInput"></param>
+    /// <param name="SaveCityToMonitor"></param>
+    /// <param name="ListIsEmpty"></param>
+    /// <param name="ApiIsEmpty"></param>
     public record TextMessages
     (
         string PatternOfCity = "=====\n" + "Номер в списке: {0}\n" + "Название в оригинале: {1}\n"
@@ -33,7 +52,9 @@ namespace WeatherApp
         string ChooseLang = "Язык поиска(ru, en): ",
         string GetCityName = "\nВведите название города: ",
         string IncorrectInput = "Некорректный ввод!\n",
-        string SaveCityToMonitor = "Номер какого города добавить в мониторинг: "
+        string SaveCityToMonitor = "Номер какого города добавить в мониторинг: ",
+        string ListIsEmpty = "Список городов пуст, добавьте город в список!",
+        string ApiIsEmpty = "Ваш API ключ недоступен, добавьте его вновь, возможно файл был удален или перемещен\nБез ключа вы не сможете осуществлять поиск!"
         );
 
 }

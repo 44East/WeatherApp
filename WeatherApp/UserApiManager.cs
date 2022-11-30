@@ -17,8 +17,15 @@ namespace WeatherApp
             userApiList = new ObservableCollection<UserApi>();
         }
 
-
+        /// <summary>
+        /// Коллекция для хранения API ключей, коллекция подходит при использовании коммерческого доступа и хранении нескольких ключей, 
+        /// соотсветсвенно можно реализовать соотвествующий выбор при запуске 
+        /// </summary>
         public ObservableCollection<UserApi> userApiList { get; private set; }
+        /// <summary>
+        /// Метод записывает API ключи в файл
+        /// </summary>
+        /// <param name="formalUserAPi"></param>
         public void WriteUserApiToLocalStorage(string formalUserAPi)
         {
             UserApi userApiProp = new UserApi { UserApiProperty = formalUserAPi };
@@ -31,6 +38,10 @@ namespace WeatherApp
                 xmlSerializer.Serialize(sw, userApiList);
             }
         }
+        /// <summary>
+        /// При запуске всегда проверяется наличие файла ключей и читается информация из него,
+        /// если файл не создан или отсутствует, выводится соответствующее сообщение и создается файл.
+        /// </summary>
         public void ReadUserApiFromLocalStorage()
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<UserApi>));
@@ -43,9 +54,17 @@ namespace WeatherApp
             }
             catch (Exception ex)
             {
-                Console.WriteLine(textMessages.ApiFileDoesntExist);
+                Console.WriteLine(textMessages.ApiFileDoesntExist);                
                 Console.WriteLine(ex.Message);
+                CreateFileUserApi();
             }
+        }
+        /// <summary>
+        /// Создает пустой файл для API ключей
+        /// </summary>
+        private void CreateFileUserApi()
+        {
+            using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApi.xml"));
         }
     }
 

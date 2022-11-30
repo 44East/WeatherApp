@@ -25,28 +25,44 @@ namespace WeatherApp
         /// Временно хранит прочитанные города из файла с локального диска, для дальнейшего вывода по ним погоды. 
         /// </summary>
         public ObservableCollection<RootBasicCityInfo> ListOfCitiesForMonitoringWeather { get; private set; }   
-        
+        /// <summary>
+        /// При запуске читает локальнй файл сохраненных городов и записывает их в коллекцию, если файл еще не создан или
+        /// удален/перемещен, то метод создает пустой файл
+        /// </summary>
         public void ReadListOfCityMonitoring()
         {        
-            using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
+            
             try
             {
+                using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
                 var prepareString = sr.ReadToEnd();
                 ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<ObservableCollection<RootBasicCityInfo>>(prepareString);
-                
+                sr.Dispose(); 
             }
             catch(FileNotFoundException ex)
             {
                 Console.WriteLine(textMessages.CityFileDoesntExist);
+                CreateFileRBCI();
                 Console.WriteLine(ex.Message);
+                
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            sr.Dispose();
+            
+            
         }
-
+        /// <summary>
+        /// Создает пустой файл для хранения базовой информации о найденных городах
+        /// </summary>
+        private void CreateFileRBCI()
+        {
+            using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RootBasicCityInfo.json"));
+        }
+        /// <summary>
+        /// Записывает в файл все изменения такие как добавление нового города или удаление города из списка.
+        /// </summary>
         private void WriteListOfCityMonitoring()
         {
 
@@ -56,12 +72,25 @@ namespace WeatherApp
             
             sw.Dispose();
         }
+        /// <summary>
+        /// Удаляет выбранный пользователем экземпляр города из коллекции и записывает изменения в файл
+        /// </summary>
+        /// <param name="rootBasicCityInfo"></param>
         public void RemoveCityFromSavedList(RootBasicCityInfo rootBasicCityInfo)
         {
+            if(rootBasicCityInfo == null)
+            {
+                Console.WriteLine(textMessages.ListIsEmpty); 
+                return;
+            }
             ListOfCitiesForMonitoringWeather.Remove(rootBasicCityInfo);
             WriteListOfCityMonitoring();
         }
-
+        /// <summary>
+        /// Принимает временную коллекцию городов которую вернул поиск с сервера, пользователь числовым выбором определяет какой город 
+        /// необходимо сохранить в файл
+        /// </summary>
+        /// <param name="formalListCities"></param>
         public void PrintReceivedCities(ObservableCollection<RootBasicCityInfo> formalListCities)
         {
             foreach (var item in formalListCities)
