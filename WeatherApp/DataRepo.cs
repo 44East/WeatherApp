@@ -54,6 +54,7 @@ namespace WeatherApp
         private void CreateFileRBCI()
         {
             using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RootBasicCityInfo.json"));
+            file.Dispose();
         }
         /// <summary>
         /// Записывает в файл все изменения такие как добавление нового города или удаление города из списка.

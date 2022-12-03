@@ -13,7 +13,7 @@ namespace WeatherApp
         private TextMessages textMessages;
         public UserApiManager()
         {
-            textMessages= new TextMessages();
+            textMessages = new TextMessages();
             userApiList = new ObservableCollection<UserApi>();
         }
 
@@ -50,13 +50,19 @@ namespace WeatherApp
                 using (StreamReader sr = new StreamReader("UserApi.xml"))
                 {
                     userApiList = xmlSerializer.Deserialize(sr) as ObservableCollection<UserApi>;
+                    sr.Dispose();
                 }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine(textMessages.ApiFileDoesntExist);
+                Console.WriteLine(ex.Message);
+                CreateFileUserApi();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(textMessages.ApiFileDoesntExist);                
-                Console.WriteLine(ex.Message);
-                CreateFileUserApi();
+
+                Console.WriteLine(ex.Message);                
             }
         }
         /// <summary>
@@ -65,6 +71,7 @@ namespace WeatherApp
         private void CreateFileUserApi()
         {
             using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApi.xml"));
+            file.Dispose();
         }
     }
 
