@@ -33,7 +33,7 @@ namespace WeatherApp
 
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<UserApi>));
 
-            using (StreamWriter sw = new StreamWriter("UserApi.xml"))
+            using (StreamWriter sw = new StreamWriter("UserApi.xml", true))
             {
                 xmlSerializer.Serialize(sw, userApiList);
             }

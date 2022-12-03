@@ -63,10 +63,10 @@ namespace WeatherApp
         private void WriteListOfCityMonitoring()
         {
 
-            using (StreamWriter sw = new StreamWriter("RootBasicCityInfo.json"))
+            using (StreamWriter sw = new StreamWriter("RootBasicCityInfo.json", true))
             {
                 Stream stream = sw.BaseStream;
-                JsonSerializer.Serialize<List<RootBasicCityInfo>>(stream, ListOfCitiesForMonitoringWeather);
+                JsonSerializer.Serialize(stream, ListOfCitiesForMonitoringWeather);
             }
             
             
