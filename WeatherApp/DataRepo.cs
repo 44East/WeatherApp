@@ -30,10 +30,12 @@ namespace WeatherApp
             
             try
             {
-                using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
-                var prepareString = sr.ReadToEnd();
-                ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
-                sr.Dispose(); 
+                using (StreamReader sr = new StreamReader("RootBasicCityInfo.json"))
+                {
+                    var prepareString = sr.ReadToEnd();
+                    ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
+                }
+                
             }
             catch(FileNotFoundException ex)
             {
@@ -53,8 +55,7 @@ namespace WeatherApp
         /// </summary>
         private void CreateFileRBCI()
         {
-            using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RootBasicCityInfo.json"));
-            file.Dispose();
+            using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RootBasicCityInfo.json"));            
         }
         /// <summary>
         /// Записывает в файл все изменения такие как добавление нового города или удаление города из списка.
@@ -62,11 +63,13 @@ namespace WeatherApp
         private void WriteListOfCityMonitoring()
         {
 
-            using StreamWriter sw = new StreamWriter("RootBasicCityInfo.json");
-            Stream stream = sw.BaseStream;
-            JsonSerializer.Serialize<List<RootBasicCityInfo>>(stream,ListOfCitiesForMonitoringWeather);
+            using (StreamWriter sw = new StreamWriter("RootBasicCityInfo.json"))
+            {
+                Stream stream = sw.BaseStream;
+                JsonSerializer.Serialize<List<RootBasicCityInfo>>(stream, ListOfCitiesForMonitoringWeather);
+            }
             
-            sw.Dispose();
+            
         }
         /// <summary>
         /// Удаляет выбранный пользователем экземпляр города из коллекции и записывает изменения в файл

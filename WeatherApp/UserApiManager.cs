@@ -50,7 +50,6 @@ namespace WeatherApp
                 using (StreamReader sr = new StreamReader("UserApi.xml"))
                 {
                     userApiList = xmlSerializer.Deserialize(sr) as ObservableCollection<UserApi>;
-                    sr.Dispose();
                 }
             }
             catch (FileNotFoundException ex)
@@ -71,7 +70,6 @@ namespace WeatherApp
         private void CreateFileUserApi()
         {
             using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApi.xml"));
-            file.Dispose();
         }
     }
 
