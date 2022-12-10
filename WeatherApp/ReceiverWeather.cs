@@ -22,7 +22,7 @@ namespace WeatherApp
         /// Выводит погоду на 5 дней по выбранному городу
         /// Если список городов пуст или API ключ недоступен, выводится соответствующее сообщение по каждому событию и происходит выход из метода
         /// </summary>
-        public async Task GetWeatherDataFromServer()
+        public async Task GetWeatherDataFromServerAsync()
         {
             var currCity = SearcherCity.GetCurrentCity();
             string apiKey = SearcherCity.ApiManager.userApiList?.FirstOrDefault().UserApiProperty;

@@ -28,7 +28,7 @@ namespace WeatherApp
         /// </summary>
         /// <param name="cityName"></param>
         /// <param name="searchLanguage"></param>
-        public async Task GettingListOfCitesOnRequest(string cityName, string searchLanguage)
+        public async Task GettingListOfCitesOnRequestAsync(string cityName, string searchLanguage)
         {
             string apiKey = ApiManager.userApiList.FirstOrDefault().UserApiProperty;
             try

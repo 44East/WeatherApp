@@ -48,10 +48,10 @@ namespace WeatherApp
                         var searchLanguage = ReadLine().Trim().ToLowerInvariant();
                         Write(textMessages.GetCityName);
                         var nameOfCity = ReadLine().Trim();
-                        receiverWeather.SearcherCity.GettingListOfCitesOnRequest(nameOfCity, searchLanguage);
+                        receiverWeather.SearcherCity.GettingListOfCitesOnRequestAsync(nameOfCity, searchLanguage);
                         break;
                     case "3":
-                        receiverWeather.GetWeatherDataFromServer();
+                        receiverWeather.GetWeatherDataFromServerAsync();
                         break;
                     case "4":
                         receiverWeather.SearcherCity.RemoveCityFromList();
