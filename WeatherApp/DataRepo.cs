@@ -40,7 +40,7 @@ namespace WeatherApp
             catch(FileNotFoundException ex)
             {
                 Console.WriteLine(textMessages.CityFileDoesntExist);
-                CreateFileRBCI();
+                CreateFileRBCIAsync();
                 Console.WriteLine(ex.Message);
                 
             }
@@ -53,9 +53,9 @@ namespace WeatherApp
         /// <summary>
         /// Создает пустой файл для хранения базовой информации о найденных городах
         /// </summary>
-        private void CreateFileRBCI()
+        private async Task CreateFileRBCIAsync()
         {
-            using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RootBasicCityInfo.json"));            
+            await using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RootBasicCityInfo.json"));            
         }
         /// <summary>
         /// Записывает в файл все изменения такие как добавление нового города или удаление города из списка.

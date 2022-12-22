@@ -56,7 +56,7 @@ namespace WeatherApp
             {
                 Console.WriteLine(textMessages.ApiFileDoesntExist);
                 Console.WriteLine(ex.Message);
-                CreateFileUserApi();
+                CreateFileUserApiAsync();
             }
             catch (Exception ex)
             {
@@ -67,9 +67,9 @@ namespace WeatherApp
         /// <summary>
         /// Создает пустой файл для API ключей
         /// </summary>
-        private void CreateFileUserApi()
+        private async Task CreateFileUserApiAsync()
         {
-            using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApi.xml"));
+           await using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApi.xml"));
         }
     }
 
