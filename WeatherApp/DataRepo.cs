@@ -92,6 +92,11 @@ namespace WeatherApp
         /// <param name="formalListCities"></param>
         public void PrintReceivedCities(List<RootBasicCityInfo> formalListCities)
         {
+            if(formalListCities == null)
+            {
+                Console.WriteLine(textMessages.IncorrectInput);
+                return;
+            }
             foreach (var item in formalListCities)
             {
                 Console.WriteLine(textMessages.PatternOfCity, formalListCities.IndexOf(item) + 1, item.EnglishName,

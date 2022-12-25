@@ -28,7 +28,7 @@ namespace WeatherApp
         /// </summary>
         /// <param name="cityName"></param>
         /// <param name="searchLanguage"></param>
-        public async Task GettingListOfCitesOnRequestAsync(HttpClient httpClient,string cityName, string searchLanguage)
+        public async Task GettingListOfCitesOnRequestAsync(string cityName, string searchLanguage)
         {
             string apiKey = ApiManager.userApiList.FirstOrDefault().UserApiProperty;
             try
@@ -38,6 +38,7 @@ namespace WeatherApp
                 // Если бы мы использовали полноценный UI, для отсутствия зависаний в интерфейсе, 
                 // Нам бы следовало использовать следующую конструкцию, ниже:
                 // using HttpResponseMessage response = await httpClient.GetAsync(jsonOnWeb);
+                HttpClient httpClient = new HttpClient();
                 using HttpResponseMessage response = httpClient.GetAsync(jsonOnWeb).Result;
                 using HttpContent content = response.Content;
                 

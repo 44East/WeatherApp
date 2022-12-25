@@ -12,13 +12,12 @@ namespace WeatherApp
         
         private ReceiverWeather receiverWeather;
         private TextMessages textMessages;
-        private HttpClient httpClient;
         /// <summary>
         /// Создает все необходимые для работы экземпляры классов, запуск приложения
         /// </summary>
         public MainMenu()
         {
-            httpClient= new HttpClient();
+            SetWindowSize(50, 45);
             textMessages = new TextMessages();  
             receiverWeather = new ReceiverWeather();
             receiverWeather.SearcherCity.ApiManager.ReadUserApiFromLocalStorage();
@@ -31,11 +30,12 @@ namespace WeatherApp
         /// </summary>
         private void GetTheMainMenu()
         {
+            WriteLine(textMessages.OpeningMenu);
             bool canExit = true;
             string? answer;
             while(canExit)
             {
-                WriteLine(textMessages.OpeningMenu);
+                WriteLine(textMessages.MainMenuMsg);
 
                 Write(textMessages.GetChoice);
                 answer = ReadLine()?.ToLowerInvariant().Trim();
@@ -44,19 +44,23 @@ namespace WeatherApp
                     case "1":
                         var api = ReadLine().Trim();
                         receiverWeather.SearcherCity.ApiManager.WriteUserApiToLocalStorage(api);
+                        GetWaitAndClear();
                         break;
                     case "2":
                         Write(textMessages.ChooseLang);
                         var searchLanguage = ReadLine().Trim().ToLowerInvariant();
                         Write(textMessages.GetCityName);
                         var nameOfCity = ReadLine().Trim();
-                        receiverWeather.SearcherCity.GettingListOfCitesOnRequestAsync(httpClient, nameOfCity, searchLanguage);
+                        receiverWeather.SearcherCity.GettingListOfCitesOnRequestAsync(nameOfCity, searchLanguage);
+                        GetWaitAndClear();
                         break;
                     case "3":
-                        receiverWeather.GetWeatherDataFromServerAsync(httpClient);
+                        receiverWeather.GetWeatherDataFromServerAsync();
+                        GetWaitAndClear();
                         break;
                     case "4":
                         receiverWeather.SearcherCity.RemoveCityFromList();
+                        GetWaitAndClear();
                         break;
                     case "q":
                     case "й":
@@ -64,10 +68,18 @@ namespace WeatherApp
                         break;
                     default:
                         WriteLine(textMessages.IncorrectInput);
+                        GetWaitAndClear();
                         break;
                 }
 
             }
         }
+        private void GetWaitAndClear()
+        {
+            Write(textMessages.Waiting);
+            ReadKey();
+            Clear();
+        }
+        
     }
 }

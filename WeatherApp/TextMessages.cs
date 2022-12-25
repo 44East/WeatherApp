@@ -17,7 +17,7 @@ namespace WeatherApp
     /// <param name="GetCityNum"></param>
     /// <param name="IntParseError"></param>
     /// <param name="CityNoExist"></param>
-    /// <param name="OpeningMenu"></param>
+    /// <param name="MainMenuMsg"></param>
     /// <param name="GetChoice"></param>
     /// <param name="ChooseLang"></param>
     /// <param name="GetCityName"></param>
@@ -39,7 +39,8 @@ namespace WeatherApp
         string IntParseError = "Ввод должен содержать только числовой набор символов!\n",
         string CityNoExist = "Такого номера нет. Попробуйте еще раз.",
         string OpeningMenu = "=================================================\n" +
-                             "|Добро пожаловать в Погоду                      |\n" +
+                             "|Добро пожаловать в Погоду                      |",
+        string MainMenuMsg = "=================================================\n" +
                              "|Доступные действия:                            |\n" +
                              "=================================================\n" +
                              "|1 - Ввести API                                 |\n" +
@@ -51,6 +52,7 @@ namespace WeatherApp
         string GetChoice = "Ваш выбор: ",
         string ChooseLang = "Язык поиска(ru, en): ",
         string GetCityName = "\nВведите название города: ",
+        string Waiting = "\nДля продолжения нажмите любую клавишу.",
         string IncorrectInput = "Некорректный ввод!\n",
         string SaveCityToMonitor = "Номер какого города добавить в мониторинг: ",
         string ListIsEmpty = "Список городов пуст, добавьте город в список!",
