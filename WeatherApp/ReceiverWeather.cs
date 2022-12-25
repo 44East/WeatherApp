@@ -22,7 +22,7 @@ namespace WeatherApp
         /// Выводит погоду на 5 дней по выбранному городу
         /// Если список городов пуст или API ключ недоступен, выводится соответствующее сообщение по каждому событию и происходит выход из метода
         /// </summary>
-        public async Task GetWeatherDataFromServerAsync()
+        public async Task GetWeatherDataFromServerAsync(HttpClient httpClient)
         {
             var currCity = SearcherCity.GetCurrentCity();
             string apiKey = SearcherCity.ApiManager.userApiList?.FirstOrDefault().UserApiProperty;
@@ -38,7 +38,10 @@ namespace WeatherApp
             }
             string jsonUrl = $"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{currCity.Key}?apikey={apiKey}&language=ru&metric=true";
 
-            HttpClient httpClient = new HttpClient();
+            // Ввиду построчного вывода в консоли, дабы не терялся порядок выода сообщений мы ждем ответа от сервера с помощью свойства Result,
+            // Если бы мы использовали полноценный UI, для отсутствия зависаний в интерфейсе, 
+            // Нам бы следовало использовать следующую конструкцию, ниже:
+            // using HttpResponseMessage response = await httpClient.GetAsync(jsonOnWeb);
             using HttpResponseMessage responseMessage = httpClient.GetAsync(jsonUrl).Result;
             using HttpContent httpContent = responseMessage.Content;
 

@@ -12,11 +12,13 @@ namespace WeatherApp
         
         private ReceiverWeather receiverWeather;
         private TextMessages textMessages;
+        private HttpClient httpClient;
         /// <summary>
         /// Создает все необходимые для работы экземпляры классов, запуск приложения
         /// </summary>
         public MainMenu()
         {
+            httpClient= new HttpClient();
             textMessages = new TextMessages();  
             receiverWeather = new ReceiverWeather();
             receiverWeather.SearcherCity.ApiManager.ReadUserApiFromLocalStorage();
@@ -48,10 +50,10 @@ namespace WeatherApp
                         var searchLanguage = ReadLine().Trim().ToLowerInvariant();
                         Write(textMessages.GetCityName);
                         var nameOfCity = ReadLine().Trim();
-                        receiverWeather.SearcherCity.GettingListOfCitesOnRequestAsync(nameOfCity, searchLanguage);
+                        receiverWeather.SearcherCity.GettingListOfCitesOnRequestAsync(httpClient, nameOfCity, searchLanguage);
                         break;
                     case "3":
-                        receiverWeather.GetWeatherDataFromServerAsync();
+                        receiverWeather.GetWeatherDataFromServerAsync(httpClient);
                         break;
                     case "4":
                         receiverWeather.SearcherCity.RemoveCityFromList();

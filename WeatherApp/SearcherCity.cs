@@ -28,14 +28,16 @@ namespace WeatherApp
         /// </summary>
         /// <param name="cityName"></param>
         /// <param name="searchLanguage"></param>
-        public async Task GettingListOfCitesOnRequestAsync(string cityName, string searchLanguage)
+        public async Task GettingListOfCitesOnRequestAsync(HttpClient httpClient,string cityName, string searchLanguage)
         {
             string apiKey = ApiManager.userApiList.FirstOrDefault().UserApiProperty;
             try
             {
                 string jsonOnWeb = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={cityName}&language={searchLanguage}";
-                HttpClient httpClient = new HttpClient();
-                
+                // Ввиду построчного вывода в консоли, дабы не терялся порядок выода сообщений мы ждем ответа от сервера с помощью свойства Result,
+                // Если бы мы использовали полноценный UI, для отсутствия зависаний в интерфейсе, 
+                // Нам бы следовало использовать следующую конструкцию, ниже:
+                // using HttpResponseMessage response = await httpClient.GetAsync(jsonOnWeb);
                 using HttpResponseMessage response = httpClient.GetAsync(jsonOnWeb).Result;
                 using HttpContent content = response.Content;
                 
