@@ -6,11 +6,13 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 
+
 namespace WeatherApp
 {
     public class ReceiverWeather
     {
         private TextMessages textMessages;
+
         public ReceiverWeather()
         {
             textMessages = new TextMessages();
@@ -22,7 +24,7 @@ namespace WeatherApp
         /// Выводит погоду на 5 дней по выбранному городу
         /// Если список городов пуст или API ключ недоступен, выводится соответствующее сообщение по каждому событию и происходит выход из метода
         /// </summary>
-        public async Task GetWeatherDataFromServerAsync()//HttpClient httpClient)
+        public void GetWeatherDataFromServer(HttpWorker httpWorker)
         {
             var currCity = SearcherCity.GetCurrentCity();
             string apiKey = SearcherCity.ApiManager.userApiList?.FirstOrDefault().UserApiProperty;
@@ -36,28 +38,44 @@ namespace WeatherApp
                 Console.WriteLine(textMessages.ApiIsEmpty);
                 return;
             }
-            string jsonUrl = $"http://dataservice.accuweather.com/forecasts/v1/daily/5day/{currCity.Key}?apikey={apiKey}&language=ru&metric=true";
-
-            HttpClient httpClient = new HttpClient();
-            // Ввиду построчного вывода в консоли, дабы не терялся порядок выода сообщений мы ждем ответа от сервера с помощью свойства Result,
-            // Если бы мы использовали полноценный UI, для отсутствия зависаний в интерфейсе, 
-            // Нам бы следовало использовать следующую конструкцию, ниже:
-            // using HttpResponseMessage response = await httpClient.GetAsync(jsonOnWeb);
-            using HttpResponseMessage responseMessage = httpClient.GetAsync(jsonUrl).Result;
-            using HttpContent httpContent = responseMessage.Content;
-
-            string receivedResult = await httpContent.ReadAsStringAsync();
-
-            var rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedResult);
-
-            foreach (var item in rootWeather.DailyForecasts)
+            string receivedResult = null;
+            try
             {
-                Console.ForegroundColor = item.Temperature.Minimum.Value < 0.0d && item.Temperature.Maximum.Value < 0.0d ? ConsoleColor.DarkBlue : item.Temperature.Minimum.Value < 0.0d ? ConsoleColor.Cyan: ConsoleColor.Yellow;
-                Console.WriteLine(textMessages.PatternOfWeather, item.Date, item.Temperature.Minimum.Value,
-                item.Temperature.Maximum.Value, item.Day.IconPhrase, item.Night.IconPhrase, currCity.LocalizedName);
-                Console.ResetColor();
-
+                //receivedResult = httpWorker.GetStringFromServer(string.Format(textMessages.GetWeatherUrl, currCity.Key, apiKey));
+                receivedResult = httpWorker.GetStringFromServer(string.Format(textMessages.GetWeatherUrl, SearcherCity.GetCurrentCity().Key, SearcherCity.ApiManager.userApiList?.FirstOrDefault().UserApiProperty));
             }
+            catch (AggregateException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            RootWeather rootWeather = null;
+            try
+            {
+                rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedResult);
+                foreach (var item in rootWeather.DailyForecasts)
+                {
+                    Console.ForegroundColor = item.Temperature.Minimum.Value < 0.0d && item.Temperature.Maximum.Value < 0.0d ? ConsoleColor.DarkBlue : item.Temperature.Minimum.Value < 0.0d ? ConsoleColor.Cyan : ConsoleColor.Yellow;
+                    Console.WriteLine(textMessages.PatternOfWeather, item.Date, item.Temperature.Minimum.Value,
+                    item.Temperature.Maximum.Value, item.Day.IconPhrase, item.Night.IconPhrase, currCity.LocalizedName);
+                    Console.ResetColor();
+
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            
 
 
 

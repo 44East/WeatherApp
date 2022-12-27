@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -62,14 +63,11 @@ namespace WeatherApp
         /// </summary>
         private void WriteListOfCityMonitoring()
         {
-
-            using (StreamWriter sw = new StreamWriter("RootBasicCityInfo.json", true))
+            using (StreamWriter sw = new StreamWriter("RootBasicCityInfo.json", false))
             {
                 Stream stream = sw.BaseStream;
                 JsonSerializer.Serialize(stream, ListOfCitiesForMonitoringWeather);
             }
-            
-            
         }
         /// <summary>
         /// Удаляет выбранный пользователем экземпляр города из коллекции и записывает изменения в файл
@@ -114,9 +112,13 @@ namespace WeatherApp
             {
                 ListOfCitiesForMonitoringWeather.Add(formalListCities[cityNum - 1]);
             }
-            catch(Exception ex)
+            catch(IndexOutOfRangeException ex)
             {
                 Console.WriteLine(textMessages.IncorrectInput);
+                Console.WriteLine(ex.Message);
+            }
+            catch(Exception ex)
+            {
                 Console.WriteLine(ex.Message);
             }
             WriteListOfCityMonitoring();

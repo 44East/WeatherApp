@@ -23,35 +23,31 @@ namespace WeatherApp
         }
 
         /// <summary>
-        /// Метод принимает две строковые переменные, название города кирилицей или латиницей и язык поискового запроса
+        /// Метод принимает две строковые переменные, [1.название города кирилицей или латиницей] и [2.язык поискового запроса]
         /// Возвращает массив данных из одного или нескольких городов, в зависимости от совпадений на сервере
         /// </summary>
         /// <param name="cityName"></param>
         /// <param name="searchLanguage"></param>
-        public async Task GettingListOfCitesOnRequestAsync(string cityName, string searchLanguage)
+        public void GettingListOfCitesOnRequest(HttpWorker httpWorker, string cityName, string searchLanguage)
         {
             string apiKey = ApiManager.userApiList.FirstOrDefault().UserApiProperty;
             try
-            {
-                string jsonOnWeb = $"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={apiKey}&q={cityName}&language={searchLanguage}";
-                // Ввиду построчного вывода в консоли, дабы не терялся порядок выода сообщений мы ждем ответа от сервера с помощью свойства Result,
-                // Если бы мы использовали полноценный UI, для отсутствия зависаний в интерфейсе, 
-                // Нам бы следовало использовать следующую конструкцию, ниже:
-                // using HttpResponseMessage response = await httpClient.GetAsync(jsonOnWeb);
-                HttpClient httpClient = new HttpClient();
-                using HttpResponseMessage response = httpClient.GetAsync(jsonOnWeb).Result;
-                using HttpContent content = response.Content;
-                
-                string prepareString = await content.ReadAsStringAsync();
+            {                
+                string prepareString = httpWorker.GetStringFromServer(string.Format(textMessages.SearchCityUrl,apiKey, cityName, searchLanguage));
                 
                 List<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
 
                 DataRepo.PrintReceivedCities(rbci);
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
                 Console.WriteLine(textMessages.ErorrsBySearch + ex.Message);
             }
+            catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
         }
         /// <summary>
         /// Удаляет город из списка через экземпляр DataRepo 

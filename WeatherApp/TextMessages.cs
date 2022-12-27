@@ -26,13 +26,30 @@ namespace WeatherApp
     /// <param name="ListIsEmpty"></param>
     /// <param name="ApiIsEmpty"></param>
     public record TextMessages
-    (
-        string PatternOfCity = "=====\n" + "Номер в списке: {0}\n" + "Название в оригинале: {1}\n"
-            + "В переводе:  {2} \n" + "Страна: {3}\n" + "Административный округ: {4}\n" + "Тип: {5}\n" + "====\n",
-        string PatternOfWeather = "=====\n" + "Город: {5}\n" + "Дата: {0}\n" + "Температура минимальная: {1}\n"
-            + "Температура максимальная: {2}\n" + "Примечание на день: {3}\n" + "Примечание на ночь: {4}\n" + "====\n",
-        string ErorrsBySearch = "Не получилось отобразить запрашиваемый город.\n" + "Возможные причины: \n" +
-                "* Неправильно указано название города\n" + "* Нет доступа к интернету\n" + "Подробнее ниже: \n",
+    (        
+        string PatternOfCity = "=====\n" + 
+                               "Номер в списке: {0}\n" +
+                               "Название в оригинале: {1}\n" + 
+                               "В переводе:  {2} \n" +
+                               "Страна: {3}\n" + 
+                               "Административный округ: {4}\n" + 
+                               "Тип: {5}\n" + 
+                               "====\n",
+        string PatternOfWeather = "=====\n" + 
+                                  "Город: {5}\n" + 
+                                  "Дата: {0}\n" + 
+                                  "Температура минимальная: {1}\n" + 
+                                  "Температура максимальная: {2}\n" + 
+                                  "Примечание на день: {3}\n" + 
+                                  "Примечание на ночь: {4}\n" + 
+                                  "====\n",
+
+        string ErorrsBySearch = "Не получилось отобразить запрашиваемый город.\n" + 
+                                "Возможные причины: \n" +
+                                "* Неправильно указано название города\n" + 
+                                "* Нет доступа к интернету\n" + 
+                                "Подробнее ниже: \n",
+
         string ApiFileDoesntExist = "Вы еще не добавили ни одного ключа доступа, воспользуйтесь соответствующим пунктом меню!",
         string CityFileDoesntExist = "Похоже файл с сохраненными городами удален, пермещен или еще не был создан.",
         string GetCityNum = "Номер города для действия: ",
@@ -57,6 +74,17 @@ namespace WeatherApp
         string SaveCityToMonitor = "Номер какого города добавить в мониторинг: ",
         string ListIsEmpty = "Список городов пуст, добавьте город в список!",
         string ApiIsEmpty = "Ваш API ключ недоступен, добавьте его вновь, возможно файл был удален или перемещен\nБез ключа вы не сможете осуществлять поиск!"
-        );
+        )
+        {
+        ///<summary>
+        ///{0} = apKey, {1} = cityName, {2} = searchLanguage
+        ///</summary>
+        public string SearchCityUrl { get; } = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey={0}&q={1}&language={2}"; //{0} = apKey, {1} = cityName, {2} = searchLanguage
+        ///<summary>                                                                                                                      
+        ///{0} = CurrentCity.Key, {1} = apiKey
+        ///</summary>
+        public string GetWeatherUrl { get; } = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/{0}?apikey={1}&language=ru&metric=true"; //{0} = CurrentCity.Key, {1} = apiKey
+
+        }
 
 }
