@@ -3,39 +3,39 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using System.Text.Json;
 
 namespace WeatherApp
 {
     public class UserApiManager
     {
         private TextMessages textMessages;
-        public UserApiManager()
-        {
-            textMessages = new TextMessages();
-            userApiList = new ObservableCollection<UserApi>();
+        private TextWorker textWorker;
+        public UserApiManager(TextMessages textMessages, TextWorker textWorker)
+        {            
+            this.textMessages = textMessages;
+            this.textWorker = textWorker;
+            UserApiList = new List<UserApi>();
         }
 
         /// <summary>
         /// Коллекция для хранения API ключей, коллекция подходит при использовании коммерческого доступа и хранении нескольких ключей, 
         /// соотсветсвенно можно реализовать соотвествующий выбор при запуске 
         /// </summary>
-        public ObservableCollection<UserApi> userApiList { get; private set; }
+        public List<UserApi> UserApiList { get; private set; }
         /// <summary>
         /// Метод записывает API ключи в файл
         /// </summary>
         /// <param name="formalUserAPi"></param>
         public void WriteUserApiToLocalStorage(string formalUserAPi)
-        {
+        {   
             UserApi userApiProp = new UserApi { UserApiProperty = formalUserAPi };
-            userApiList.Add(userApiProp);
+            UserApiList.Add(userApiProp);
 
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<UserApi>));
-
-            using (StreamWriter sw = new StreamWriter("UserApi.xml", true))
+            using (StreamWriter sw = new StreamWriter("UserApiKeys.json", false))
             {
-                xmlSerializer.Serialize(sw, userApiList);
+                Stream stream = sw.BaseStream;
+                JsonSerializer.Serialize(stream, UserApiList);
             }
         }
         /// <summary>
@@ -44,24 +44,28 @@ namespace WeatherApp
         /// </summary>
         public void ReadUserApiFromLocalStorage()
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<UserApi>));
             try
             {
-                using (StreamReader sr = new StreamReader("UserApi.xml"))
+                using(StreamReader sr = new StreamReader("UserApiKeys.json"))
                 {
-                    userApiList = xmlSerializer.Deserialize(sr) as ObservableCollection<UserApi>;
+                    Stream stream = sr.BaseStream;
+                    UserApiList = JsonSerializer.Deserialize<List<UserApi>>(stream);
                 }
+            }
+            catch(JsonException ex)
+            {
+                textWorker.ShowTheText(textMessages.ApiFileDoesntExist);
+                textWorker.ShowTheText(ex.Message);
             }
             catch (FileNotFoundException ex)
             {
-                Console.WriteLine(textMessages.ApiFileDoesntExist);
-                Console.WriteLine(ex.Message);
+                textWorker.ShowTheText(textMessages.ApiFileDoesntExist);
+                textWorker.ShowTheText(ex.Message);
                 CreateFileUserApiAsync();
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine(ex.Message);                
+                Console.WriteLine(ex.Message);
             }
         }
         /// <summary>
@@ -69,7 +73,7 @@ namespace WeatherApp
         /// </summary>
         private async Task CreateFileUserApiAsync()
         {
-           await using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApi.xml"));
+           await using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApiKeys.json"));
         }
     }
 

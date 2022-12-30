@@ -12,14 +12,18 @@ namespace WeatherApp
     public class SearcherCity
     {
 
-        public UserApiManager ApiManager { get; private set; }
-        public DataRepo DataRepo {get; private set;}
+        public UserApiManager ApiManager { get; }
+        public DataRepo DataRepo { get; private set; }
+
         private TextMessages textMessages;
-        public SearcherCity()
+        private TextWorker textWorker;
+        public SearcherCity(TextMessages textMessages, TextWorker textWorker)
         {
-            textMessages= new TextMessages();
-            ApiManager= new UserApiManager();
-            DataRepo= new DataRepo();
+            this.textMessages = textMessages;
+            this.textWorker = textWorker;
+            ApiManager = new UserApiManager(textMessages, textWorker);
+            DataRepo = new DataRepo(textMessages,textWorker);
+            
         }
 
         /// <summary>
@@ -30,29 +34,49 @@ namespace WeatherApp
         /// <param name="searchLanguage"></param>
         public void GettingListOfCitesOnRequest(HttpWorker httpWorker, string cityName, string searchLanguage)
         {
-            string apiKey = ApiManager.userApiList.FirstOrDefault().UserApiProperty;
+            StringBuilder fullUrlToRequest = new StringBuilder();   
             try
-            {                
-                string prepareString = httpWorker.GetStringFromServer(string.Format(textMessages.SearchCityUrl,apiKey, cityName, searchLanguage));
-                
-                List<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
+            {
+                string apiKey = ApiManager.UserApiList.FirstOrDefault().UserApiProperty;
+                fullUrlToRequest.AppendFormat(textMessages.SearchCityUrl, apiKey, cityName, searchLanguage);
+                string prepareString = httpWorker.GetStringFromServer(fullUrlToRequest.ToString());
 
-                DataRepo.PrintReceivedCities(rbci);
+                List<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
+                if (rbci.Count == 0)
+                    throw new JsonException(textMessages.SearchError);
+
+                DataRepo.ShowReceivedCities(rbci);
+            }
+            catch(NullReferenceException ex)
+            {
+                textWorker.ShowTheText(textMessages.ApiIsEmpty);
+                textWorker.ShowTheText(ex.Message);
+            }
+            catch (AggregateException ex)
+            {
+                textWorker.ShowTheText(textMessages.NetworkOrHostIsNotAwailable);
+                textWorker.ShowTheText(ex.Message);
             }
             catch (JsonException ex)
             {
-                Console.WriteLine(textMessages.ErorrsBySearch + ex.Message);
+                textWorker.ShowTheText(textMessages.ErorrsBySearch + ex.Message);
             }
-            catch(Exception ex) 
-            {
-                Console.WriteLine(ex.Message);
-            }
-            
+
         }
         /// <summary>
         /// Удаляет город из списка через экземпляр DataRepo 
         /// </summary>
-        public void RemoveCityFromList() => DataRepo.RemoveCityFromSavedList(GetCurrentCity());
+        public void RemoveCityFromList()
+        {
+            try
+            {
+                DataRepo.RemoveCityFromSavedList(GetCurrentCity());
+            }
+            catch(ArgumentNullException ex)
+            {
+                textWorker.ShowTheText(ex.Message);
+            }
+        }
         /// <summary>
         /// Возвращает выбранный пользователем экземпляр города из коллекции, для манипуляций с ним(удаление или вывод погоды)
         /// </summary>
@@ -60,36 +84,28 @@ namespace WeatherApp
         public RootBasicCityInfo GetCurrentCity()
         {
             if (DataRepo.ListOfCitiesForMonitoringWeather.Count < 1)
-                return null;
-            foreach (var item in DataRepo.ListOfCitiesForMonitoringWeather)
-            {
-                Console.WriteLine(textMessages.PatternOfCity, DataRepo.ListOfCitiesForMonitoringWeather.IndexOf(item) + 1,
-                item.EnglishName, item.LocalizedName, item.Country.LoacalizedName,
-                item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType);
+                throw new ArgumentNullException(textMessages.CityListIsEmpty);
 
-            }
-
-            bool ifNotExist = false;
+            textWorker.ShowSavedCity(DataRepo.ListOfCitiesForMonitoringWeather);
+            bool isCityNumExist;
 
             int cityNum;
             Console.Write(textMessages.GetCityNum);
             do
             {
+                isCityNumExist = true;
                 while (!int.TryParse(Console.ReadLine(), out cityNum))
                 {
-                    Console.WriteLine(textMessages.IntParseError + textMessages.GetCityNum);
-                }
-
-
-                ifNotExist = default;
+                    textWorker.ShowTheText(textMessages.IntParseError + textMessages.GetCityNum);
+                }                
 
                 if (cityNum < 1 || cityNum > DataRepo.ListOfCitiesForMonitoringWeather.Count)
                 {
-                    Console.WriteLine(textMessages.CityNoExist);
-                    ifNotExist = true;
+                    textWorker.ShowTheText(textMessages.CityNoExist);
+                    isCityNumExist = false;
                 }
             }
-            while (ifNotExist);
+            while (!isCityNumExist);
             return DataRepo.ListOfCitiesForMonitoringWeather[cityNum - 1];
         }
     }

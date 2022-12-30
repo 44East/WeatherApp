@@ -13,10 +13,12 @@ namespace WeatherApp
     public class DataRepo
     {
         private TextMessages textMessages;
-        public DataRepo()
+        private TextWorker textWorker;
+        public DataRepo(TextMessages textMessages,TextWorker textWorker)
         {
-            textMessages= new TextMessages();
             ListOfCitiesForMonitoringWeather = new List<RootBasicCityInfo>();
+            this.textMessages = textMessages;
+            this.textWorker = textWorker;
         }
         /// <summary>
         /// Временно хранит прочитанные города из файла с локального диска, для дальнейшего вывода по ним погоды. 
@@ -27,28 +29,28 @@ namespace WeatherApp
         /// удален/перемещен, то метод создает пустой файл
         /// </summary>
         public void ReadListOfCityMonitoring()
-        {        
-            
+        {   
             try
             {
-                using (StreamReader sr = new StreamReader("RootBasicCityInfo.json"))
-                {
-                    var prepareString = sr.ReadToEnd();
-                    ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
-                }
-                
+                using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
+                var prepareString = sr.ReadToEnd();
+                ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
+            }
+            catch(JsonException ex)
+            {
+                textWorker.ShowTheText(textMessages.CityFileFailure);
             }
             catch(FileNotFoundException ex)
             {
-                Console.WriteLine(textMessages.CityFileDoesntExist);
+                textWorker.ShowTheText(textMessages.CityFileDoesntExist);
                 CreateFileRBCIAsync();
-                Console.WriteLine(ex.Message);
+                textWorker.ShowTheText(ex.Message);
                 
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
-            }           
+                textWorker.ShowTheText(ex.Message);
+            }          
             
         }
         /// <summary>
@@ -74,12 +76,7 @@ namespace WeatherApp
         /// </summary>
         /// <param name="rootBasicCityInfo"></param>
         public void RemoveCityFromSavedList(RootBasicCityInfo rootBasicCityInfo)
-        {
-            if(rootBasicCityInfo == null)
-            {
-                Console.WriteLine(textMessages.ListIsEmpty); 
-                return;
-            }
+        {   
             ListOfCitiesForMonitoringWeather.Remove(rootBasicCityInfo);
             WriteListOfCityMonitoring();
         }
@@ -88,39 +85,31 @@ namespace WeatherApp
         /// необходимо сохранить в файл
         /// </summary>
         /// <param name="formalListCities"></param>
-        public void PrintReceivedCities(List<RootBasicCityInfo> formalListCities)
+        public void ShowReceivedCities(List<RootBasicCityInfo> formalListCities)
         {
-            if(formalListCities == null)
-            {
-                Console.WriteLine(textMessages.IncorrectInput);
-                return;
-            }
-            foreach (var item in formalListCities)
-            {
-                Console.WriteLine(textMessages.PatternOfCity, formalListCities.IndexOf(item) + 1, item.EnglishName,
-                                  item.LocalizedName, item.Country.LoacalizedName,
-                                  item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType);
-                
-            }
+            textWorker.ShowSavedCity(formalListCities);
+
             Console.Write(textMessages.SaveCityToMonitor);
-            int cityNum;
-            while (!int.TryParse(Console.ReadLine(), out cityNum))
+            bool correctInput = false;
+            do
             {
-                Console.WriteLine(textMessages.IntParseError);
+                int cityNum;
+                while (!int.TryParse(Console.ReadLine(), out cityNum))
+                {
+                    textWorker.ShowTheText(textMessages.IntParseError);
+                }
+                try
+                {
+                    ListOfCitiesForMonitoringWeather.Add(formalListCities[cityNum - 1]);
+                    correctInput= true;
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    textWorker.ShowTheText(textMessages.IncorrectInput);
+                    textWorker.ShowTheText(ex.Message);
+                }
             }
-            try
-            {
-                ListOfCitiesForMonitoringWeather.Add(formalListCities[cityNum - 1]);
-            }
-            catch(IndexOutOfRangeException ex)
-            {
-                Console.WriteLine(textMessages.IncorrectInput);
-                Console.WriteLine(ex.Message);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            while(!correctInput);
             WriteListOfCityMonitoring();
         }
     }

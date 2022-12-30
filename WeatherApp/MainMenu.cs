@@ -13,31 +13,34 @@ namespace WeatherApp
         private HttpWorker httpWorker;
         private ReceiverWeather receiverWeather;
         private TextMessages textMessages;
+        private TextWorker textWorker;
         /// <summary>
         /// Создает все необходимые для работы экземпляры классов, запуск приложения
         /// </summary>
         public MainMenu()
         {
-            SetWindowSize(50, 45);
             httpWorker= new HttpWorker();
-            textMessages = new TextMessages();  
-            receiverWeather = new ReceiverWeather();
-            receiverWeather.SearcherCity.ApiManager.ReadUserApiFromLocalStorage();
-            receiverWeather.SearcherCity.DataRepo.ReadListOfCityMonitoring();
+            textMessages = new TextMessages();
+            textWorker = new TextWorker(textMessages);
+            receiverWeather = new ReceiverWeather(textMessages, textWorker);
+            textWorker.ShowText += TextWorker.OutputText;
+
+            InitializeUserFiles();
             GetTheMainMenu();
             
         }
+        
         /// <summary>
         /// Вывод главного меню поддерживает числовой выбор пунктов(в строковом формате)
         /// </summary>
         private void GetTheMainMenu()
         {
-            WriteLine(textMessages.OpeningMenu);
+            textWorker.ShowTheText(textMessages.OpeningMenu);
             bool canExit = true;
             string? answer;
             while(canExit)
             {
-                WriteLine(textMessages.MainMenuMsg);
+                textWorker.ShowTheText(textMessages.MainMenuMsg);
 
                 Write(textMessages.GetChoice);
                 answer = ReadLine()?.ToLowerInvariant().Trim();
@@ -81,6 +84,11 @@ namespace WeatherApp
             Write(textMessages.Waiting);
             ReadKey();
             Clear();
+        }
+        private void InitializeUserFiles()
+        {
+            receiverWeather.SearcherCity.ApiManager.ReadUserApiFromLocalStorage();
+            receiverWeather.SearcherCity.DataRepo.ReadListOfCityMonitoring();
         }
         
     }
