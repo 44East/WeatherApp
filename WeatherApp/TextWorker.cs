@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
+    /// <summary>
+    /// Обсуживающий класс для работы со строковыми сообщениями и выводом их на консоль. 
+    /// </summary>
     public class TextWorker
     {
         public delegate void ShowTextHandler(string text);
-        public event ShowTextHandler ShowText;
+        public event ShowTextHandler ShowText = null;
 
 
         private TextMessages textMessages;
@@ -25,13 +28,22 @@ namespace WeatherApp
         /// </summary>
         /// <param name="text"></param>
         public static void OutputText(string text) => Console.WriteLine(text);
+        /// <summary>
+        /// Инциализация события для вывода текстового сообщения
+        /// </summary>
+        /// <param name="text"></param>
         public void ShowTheText(string text)
         {
             ShowText?.Invoke(text);
         }
-        public void ShowWeatherInCurrentCity(RootBasicCityInfo currentCity, string receivedWeatherForCurrentCity)
+        /// <summary>
+        /// Выводит на коносль погоду получнную с сервера по выбранному экземпляру города.
+        /// </summary>
+        /// <param name="currentCity"></param>
+        /// <param name="rootWeather"></param>
+        public void ShowWeatherInCurrentCity(RootBasicCityInfo currentCity, RootWeather rootWeather)
         {
-                var rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedWeatherForCurrentCity);
+                
                 foreach (var item in rootWeather.DailyForecasts)
                 {
                     Console.ForegroundColor = item.Temperature.Minimum.Value < 0.0d && item.Temperature.Maximum.Value < 0.0d ? ConsoleColor.DarkBlue : item.Temperature.Minimum.Value < 0.0d ? ConsoleColor.Cyan : ConsoleColor.Yellow;
@@ -41,6 +53,11 @@ namespace WeatherApp
 
                 }
         }
+        /// <summary>
+        /// Принимает коллекцию городов либо из файла, либо временную с сервера для вывода в консоль.
+        /// </summary>
+        /// <param name="cityList"></param>
+        /// <exception cref="NullReferenceException"></exception>
         public void ShowSavedCity(List<RootBasicCityInfo> cityList) 
         {
             foreach (var item in cityList ?? throw new NullReferenceException())

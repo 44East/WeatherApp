@@ -61,14 +61,17 @@ namespace WeatherApp
         string CityListIsEmpty = "Список городов пуст, добавьте город в список!",
         string ApiIsEmpty = "Ваш API ключ недоступен, добавьте его вновь, возможно файл был удален или перемещен\nБез ключа вы не сможете осуществлять поиск!",
         string NetworkOrHostIsNotAwailable = "Похоже отсутствует соединение с интернетом или запрашиваемый сервер недоступен.",
-        string SearchError = "Список найденных городов пуст, т.к. поиск завершился неудачей."
+        string SearchError = "Список найденных городов пуст, т.к. поиск завершился неудачей.",
+        string ReceiveWeatherError = "Выгрузка погоды с сервера завершилась неудачей, повторите попытку."
         )
     {
         ///<summary>
+        ///Ссылка для поиска города на сервере.
         ///{0} = apKey, {1} = cityName, {2} = searchLanguage
         ///</summary>
         public string SearchCityUrl { get; } = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey={0}&q={1}&language={2}"; //{0} = apKey, {1} = cityName, {2} = searchLanguage
-        ///<summary>                                                                                                                      
+        ///<summary>
+        ///Ссылка для вывода погоды по конкретному городу на 5 дней.
         ///{0} = CurrentCity.Key, {1} = apiKey
         ///</summary>
         public string GetWeatherUrl { get; } = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/{0}?apikey={1}&language=ru&metric=true"; //{0} = CurrentCity.Key, {1} = apiKey

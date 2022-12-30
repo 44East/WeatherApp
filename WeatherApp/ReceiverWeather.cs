@@ -29,7 +29,8 @@ namespace WeatherApp
         {            
             RootBasicCityInfo currentCity;
             string receivedWeatherForCurrentCity;
-            StringBuilder fullUrlToRequest = new StringBuilder();            
+            StringBuilder fullUrlToRequest = new StringBuilder();
+            RootWeather rootWeather;
             try 
             {
                 currentCity = SearcherCity.GetCurrentCity();                
@@ -38,6 +39,10 @@ namespace WeatherApp
                 fullUrlToRequest.AppendFormat(textMessages.GetWeatherUrl, currentCity.Key, apiKey);
 
                 receivedWeatherForCurrentCity = httpWorker.GetStringFromServer(fullUrlToRequest.ToString());
+
+                rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedWeatherForCurrentCity);
+
+                textWorker.ShowWeatherInCurrentCity(currentCity, rootWeather);
             }
             catch(ArgumentNullException ex)
             {
@@ -56,7 +61,12 @@ namespace WeatherApp
                 textWorker.ShowTheText(ex.Message);
                 return;
             }
-            textWorker.ShowWeatherInCurrentCity(currentCity, receivedWeatherForCurrentCity);                  
+            catch(JsonException ex)
+            {
+                textWorker.ShowTheText(textMessages.ReceiveWeatherError);
+                textWorker.ShowTheText(ex.Message);
+            }
+                             
 
         }
         

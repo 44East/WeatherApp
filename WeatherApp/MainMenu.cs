@@ -9,13 +9,14 @@ namespace WeatherApp
 {
     public class MainMenu
     {
-        public Action<string> Action = new Action<string>(TextWorker.OutputText);
         private HttpWorker httpWorker;
         private ReceiverWeather receiverWeather;
         private TextMessages textMessages;
         private TextWorker textWorker;
         /// <summary>
-        /// Создает все необходимые для работы экземпляры классов, запуск приложения
+        /// Создает все необходимые для работы экземпляры классов, запуск приложения, 
+        /// Проброс эземпляров TextWorker, TextMessages для всех рабочих классов
+        /// Инициализация события для вывода текстовых сообщений
         /// </summary>
         public MainMenu()
         {
@@ -32,6 +33,11 @@ namespace WeatherApp
         
         /// <summary>
         /// Вывод главного меню поддерживает числовой выбор пунктов(в строковом формате)
+        /// 1. Ввод нового API для доступа к серверу поиск/выдача погоды
+        /// 2. Добавление нового города, в коллекцию, с возможностью выбора языка поиска.
+        /// 3. Просмотр погоды по сохраненным городам.
+        /// 4. Удаление города из коллекции
+        /// 5. Выход
         /// </summary>
         private void GetTheMainMenu()
         {
@@ -79,12 +85,18 @@ namespace WeatherApp
 
             }
         }
+        /// <summary>
+        /// Метод для очистки консоли после каждого действия, перед каждой очисткой есть задержка до пользовательского ввода.
+        /// </summary>
         private void GetWaitAndClear()
         {
             Write(textMessages.Waiting);
             ReadKey();
             Clear();
         }
+        /// <summary>
+        /// Читает API ключ для доступа к севреру и спиок сохраненнх городов
+        /// </summary>
         private void InitializeUserFiles()
         {
             receiverWeather.SearcherCity.ApiManager.ReadUserApiFromLocalStorage();
