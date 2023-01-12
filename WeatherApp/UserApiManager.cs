@@ -11,10 +11,13 @@ namespace WeatherApp
     {
         private TextMessages textMessages;
         private TextWorker textWorker;
+        private FileWorker<UserApi> fileWorker;
         public UserApiManager(TextMessages textMessages, TextWorker textWorker)
         {            
             this.textMessages = textMessages;
             this.textWorker = textWorker;
+
+            fileWorker= new FileWorker<UserApi>();
             UserApiList = new List<UserApi>();
         }
 
@@ -22,35 +25,51 @@ namespace WeatherApp
         /// Коллекция для хранения API ключей, коллекция подходит при использовании коммерческого доступа и хранении нескольких ключей, 
         /// соотсветсвенно можно реализовать соотвествующий выбор при запуске 
         /// </summary>
-        public List<UserApi> UserApiList { get; private set; }
+        private List<UserApi> UserApiList;
         /// <summary>
         /// Метод записывает API ключи в файл
         /// </summary>
         /// <param name="formalUserAPi"></param>
         public void WriteUserApiToLocalStorage(string formalUserAPi)
-        {   
-            UserApi userApiProp = new UserApi { UserApiProperty = formalUserAPi };
-            UserApiList.Add(userApiProp);
-
-            using (StreamWriter sw = new StreamWriter("UserApiKeys.json", false))
+        {
+            try
             {
-                Stream stream = sw.BaseStream;
-                JsonSerializer.Serialize(stream, UserApiList);
+                if (string.IsNullOrEmpty(formalUserAPi))
+                    throw new NullReferenceException(textMessages.IncorrectInput);
+
+                UserApiList.Add(new UserApi(formalUserAPi));
+                fileWorker.WriteFileToLocalStorage(UserApiList, textMessages.ApiKeysFileName);
+            }
+            catch(NullReferenceException ex)
+            { 
+                textWorker.ShowTheText(ex.Message);
+                return;
+            }
+            catch(JsonException ex)
+            {
+                textWorker.ShowTheText(textMessages.ApiFileDoesntExist);
+                textWorker.ShowTheText(ex.Message);
             }
         }
         /// <summary>
+        /// Возвращает первый доступный ключ из коллекции.
+        /// Инкапсулирует полностью коллекцию
+        /// </summary>
+        /// <returns></returns>
+        public string GetTheFirstKey()
+        {
+            return UserApiList?.FirstOrDefault()?.UserApiProperty;
+        }
+        /// <summary>
         /// При запуске всегда проверяется наличие файла ключей и читается информация из него,
-        /// если файл не создан или отсутствует, выводится соответствующее сообщение и создается файл.
+        /// если файл не создан или отсутствует, выводится соответствующее сообщение и экземпляр файлового обработчика создает пустой файл 
+        /// и пробрасывает соответствующее исключение.
         /// </summary>
         public void ReadUserApiFromLocalStorage()
         {
             try
             {
-                using(StreamReader sr = new StreamReader("UserApiKeys.json"))
-                {
-                    Stream stream = sr.BaseStream;
-                    UserApiList = JsonSerializer.Deserialize<List<UserApi>>(stream);
-                }
+                UserApiList = fileWorker.ReadFileFromLocalDisk(textMessages.ApiKeysFileName); 
             }
             catch(JsonException ex)
             {
@@ -61,20 +80,13 @@ namespace WeatherApp
             {
                 textWorker.ShowTheText(textMessages.ApiFileDoesntExist);
                 textWorker.ShowTheText(ex.Message);
-                CreateFileUserApiAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
         }
-        /// <summary>
-        /// Создает пустой файл для API ключей
-        /// </summary>
-        private async Task CreateFileUserApiAsync()
-        {
-           await using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserApiKeys.json"));
-        }
+        
     }
 
 }

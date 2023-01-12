@@ -14,8 +14,10 @@ namespace WeatherApp
     {
         private TextMessages textMessages;
         private TextWorker textWorker;
+        private FileWorker<RootBasicCityInfo> fileWorker;
         public DataRepo(TextMessages textMessages,TextWorker textWorker)
         {
+            fileWorker = new FileWorker<RootBasicCityInfo>();
             ListOfCitiesForMonitoringWeather = new List<RootBasicCityInfo>();
             this.textMessages = textMessages;
             this.textWorker = textWorker;
@@ -26,15 +28,13 @@ namespace WeatherApp
         public List<RootBasicCityInfo> ListOfCitiesForMonitoringWeather { get; private set; }   
         /// <summary>
         /// При запуске читает локальнй файл сохраненных городов и записывает их в коллекцию, если файл еще не создан или
-        /// удален/перемещен, то метод создает пустой файл
+        /// удален/перемещен, то экземпляр файлового обработчика создает пустой файл и пробрасывает соответствующее исключение.
         /// </summary>
         public void ReadListOfCityMonitoring()
         {   
             try
             {
-                using StreamReader sr = new StreamReader("RootBasicCityInfo.json");
-                var prepareString = sr.ReadToEnd();
-                ListOfCitiesForMonitoringWeather = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
+                ListOfCitiesForMonitoringWeather = fileWorker.ReadFileFromLocalDisk(textMessages.CityFileName);
             }
             catch(JsonException ex)
             {
@@ -43,7 +43,6 @@ namespace WeatherApp
             catch(FileNotFoundException ex)
             {
                 textWorker.ShowTheText(textMessages.CityFileDoesntExist);
-                CreateFileRBCIAsync();
                 textWorker.ShowTheText(ex.Message);
                 
             }
@@ -52,23 +51,24 @@ namespace WeatherApp
                 textWorker.ShowTheText(ex.Message);
             }          
             
-        }
-        /// <summary>
-        /// Создает пустой файл для хранения базовой информации о найденных городах
-        /// </summary>
-        private async Task CreateFileRBCIAsync()
-        {
-            await using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RootBasicCityInfo.json"));            
-        }
+        }        
         /// <summary>
         /// Записывает в файл все изменения такие как добавление нового города или удаление города из списка.
         /// </summary>
         private void WriteListOfCityMonitoring()
         {
-            using (StreamWriter sw = new StreamWriter("RootBasicCityInfo.json", false))
+            try
             {
-                Stream stream = sw.BaseStream;
-                JsonSerializer.Serialize(stream, ListOfCitiesForMonitoringWeather);
+                fileWorker.WriteFileToLocalStorage(ListOfCitiesForMonitoringWeather, textMessages.CityFileName);
+            }
+            catch(JsonException ex)
+            {
+                textWorker.ShowTheText(textMessages.CityListWritingFailure);
+                textWorker.ShowTheText(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                textWorker.ShowTheText(ex.Message);
             }
         }
         /// <summary>

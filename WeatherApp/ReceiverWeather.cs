@@ -11,14 +11,16 @@ namespace WeatherApp
 {
     public class ReceiverWeather
     {
-        public SearcherCity SearcherCity { get; }
+        private SearcherCity searcherCity;
+        private UserApiManager apiManager;
         private TextMessages textMessages;
         private TextWorker textWorker;
-        public ReceiverWeather(TextMessages textMessages, TextWorker textWorker)
+        public ReceiverWeather(TextMessages textMessages, TextWorker textWorker, SearcherCity searcherCity, UserApiManager apiManager)
         {
             this.textMessages = textMessages;            
             this.textWorker = textWorker;
-            SearcherCity = new SearcherCity(textMessages, textWorker);
+            this.searcherCity = searcherCity;
+            this.apiManager = apiManager;
         }        
         /// <summary>
         /// Метод запрашивает API ключ доступа к серверу и уникальный номер сохраненного города, если пара ключ номер приняты сервером
@@ -33,8 +35,8 @@ namespace WeatherApp
             RootWeather rootWeather;
             try 
             {
-                currentCity = SearcherCity.GetCurrentCity();                
-                string apiKey = SearcherCity.ApiManager.UserApiList?.FirstOrDefault().UserApiProperty;
+                currentCity = searcherCity.GetCurrentCity();
+                string apiKey = apiManager.GetTheFirstKey();
 
                 fullUrlToRequest.AppendFormat(textMessages.GetWeatherUrl, currentCity.Key, apiKey);
 

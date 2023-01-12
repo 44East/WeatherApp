@@ -38,6 +38,7 @@ namespace WeatherApp
                                     "\nВоспользуйтесь соответствующим пунктом меню и добавьте новый ключ!",
         string CityFileDoesntExist = "Похоже файл с сохраненными городами удален, пермещен или еще не был создан.",
         string CityFileFailure = "Файл с городами пуст или нечитаем, добавьте новые города в список",
+        string CityListWritingFailure = "Ошибка записи в файл, список городов поврежден",
         string GetCityNum = "Номер города для действия: ",
         string IntParseError = "Ввод должен содержать только числовой набор символов!\n",
         string CityNoExist = "Такого номера нет. Попробуйте еще раз.",
@@ -62,7 +63,9 @@ namespace WeatherApp
         string ApiIsEmpty = "Ваш API ключ недоступен, добавьте его вновь, возможно файл был удален или перемещен\nБез ключа вы не сможете осуществлять поиск!",
         string NetworkOrHostIsNotAwailable = "Похоже отсутствует соединение с интернетом или запрашиваемый сервер недоступен.",
         string SearchError = "Список найденных городов пуст, т.к. поиск завершился неудачей.",
-        string ReceiveWeatherError = "Выгрузка погоды с сервера завершилась неудачей, повторите попытку."
+        string ReceiveWeatherError = "Выгрузка погоды с сервера завершилась неудачей, повторите попытку.",
+        string CityFileName = "RootBasicCityInfo.json",
+        string ApiKeysFileName = "UserApiKeys.json"
         )
     {
         ///<summary>

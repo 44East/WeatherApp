@@ -11,6 +11,8 @@ namespace WeatherApp
     /// </summary>
     public class UserApi
     {
+        public UserApi() { }
+        public UserApi(string userApi) => UserApiProperty = userApi;
         public string UserApiProperty { get; set; }
     }
 }

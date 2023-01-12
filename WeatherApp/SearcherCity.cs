@@ -12,18 +12,18 @@ namespace WeatherApp
     public class SearcherCity
     {
 
-        public UserApiManager ApiManager { get; }
-        public DataRepo DataRepo { get; private set; }
+        private UserApiManager apiManager;
+        private DataRepo DataRepo;
 
         private TextMessages textMessages;
         private TextWorker textWorker;
-        public SearcherCity(TextMessages textMessages, TextWorker textWorker)
+        public SearcherCity(TextMessages textMessages, TextWorker textWorker, UserApiManager apiManager, DataRepo dataRepo)
         {
             this.textMessages = textMessages;
             this.textWorker = textWorker;
-            ApiManager = new UserApiManager(textMessages, textWorker);
-            DataRepo = new DataRepo(textMessages,textWorker);
-            
+
+            this.apiManager = apiManager;
+            DataRepo = dataRepo;            
         }
 
         /// <summary>
@@ -38,8 +38,10 @@ namespace WeatherApp
             StringBuilder fullUrlToRequest = new StringBuilder();   
             try
             {
-                string apiKey = ApiManager.UserApiList.FirstOrDefault().UserApiProperty;
+                string apiKey = apiManager.GetTheFirstKey();
+
                 fullUrlToRequest.AppendFormat(textMessages.SearchCityUrl, apiKey, cityName, searchLanguage);
+
                 string prepareString = httpWorker.GetStringFromServer(fullUrlToRequest.ToString());
 
                 List<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);

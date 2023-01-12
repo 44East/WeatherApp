@@ -64,8 +64,7 @@ namespace WeatherApp
             {
                 Console.WriteLine(textMessages.PatternOfCity, cityList.IndexOf(item) + 1,
                 item.EnglishName, item.LocalizedName, item.Country.LoacalizedName,
-                item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType);
-
+                item.AdministrativeArea.LocalizedName, item.AdministrativeArea.LocalizedType); 
             }
         }
     }
