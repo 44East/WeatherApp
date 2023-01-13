@@ -23,11 +23,11 @@ namespace WeatherApp
 
         /// <summary>
         /// Коллекция для хранения API ключей, коллекция подходит при использовании коммерческого доступа и хранении нескольких ключей, 
-        /// соотсветсвенно можно реализовать соотвествующий выбор при запуске 
+        /// соотсветсвенно можно реализовать необходимый выбор при запуске. 
         /// </summary>
         private List<UserApi> UserApiList;
         /// <summary>
-        /// Метод записывает API ключи в файл
+        /// Метод записывает API ключи в файл.
         /// </summary>
         /// <param name="formalUserAPi"></param>
         public void WriteUserApiToLocalStorage(string formalUserAPi)
@@ -52,13 +52,13 @@ namespace WeatherApp
             }
         }
         /// <summary>
-        /// Возвращает первый доступный ключ из коллекции.
-        /// Инкапсулирует полностью коллекцию
+        /// Возвращает первый доступный ключ из коллекции если коллекция пуста, возвращает null.
+        /// Полностью инкапсулирует коллекцию.
         /// </summary>
         /// <returns></returns>
         public string GetTheFirstKey()
         {
-            return UserApiList?.FirstOrDefault()?.UserApiProperty;
+            return UserApiList?.FirstOrDefault()?.UserApiProperty ?? null;
         }
         /// <summary>
         /// При запуске всегда проверяется наличие файла ключей и читается информация из него,

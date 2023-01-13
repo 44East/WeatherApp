@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace WeatherApp
 {
     /// <summary>
-    /// Строка для хранения прочитанного API ключа из файла
+    /// Строка для хранения прочитанного API ключа из файла.
     /// </summary>
     public class UserApi
     {

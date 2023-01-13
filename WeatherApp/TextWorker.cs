@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace WeatherApp
 {
     /// <summary>
-    /// Обсуживающий класс для работы со строковыми сообщениями и выводом их на консоль. 
+    /// Обслуживающий класс для работы со строковыми сообщениями и выводом их на консоль. 
     /// </summary>
     public class TextWorker
     {
@@ -24,12 +24,12 @@ namespace WeatherApp
         }
 
         /// <summary>
-        /// Выводит текстовые сообщения, метод для присвоения делегату, сигнатура может быть переназначена, например для вывода в TextBox(WPF)
+        /// Выводит текстовые сообщения, метод для присвоения делегату, сигнатура может быть переназначена, например для вывода в TextBox(WPF).
         /// </summary>
         /// <param name="text"></param>
         public static void OutputText(string text) => Console.WriteLine(text);
         /// <summary>
-        /// Инциализация события для вывода текстового сообщения
+        /// Инциализация события для вывода текстового сообщения.
         /// </summary>
         /// <param name="text"></param>
         public void ShowTheText(string text)
@@ -37,7 +37,7 @@ namespace WeatherApp
             ShowText?.Invoke(text);
         }
         /// <summary>
-        /// Выводит на коносль погоду получнную с сервера по выбранному экземпляру города.
+        /// Выводит на коносль погоду полученную с сервера по выбранному экземпляру города.
         /// </summary>
         /// <param name="currentCity"></param>
         /// <param name="rootWeather"></param>
@@ -54,7 +54,7 @@ namespace WeatherApp
                 }
         }
         /// <summary>
-        /// Принимает коллекцию городов либо из файла, либо временную с сервера для вывода в консоль.
+        /// Принимает коллекцию городов из файла, либо коллекцию городов из поиска с сервера для вывода в консоль.
         /// </summary>
         /// <param name="cityList"></param>
         /// <exception cref="NullReferenceException"></exception>

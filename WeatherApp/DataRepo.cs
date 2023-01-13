@@ -72,7 +72,7 @@ namespace WeatherApp
             }
         }
         /// <summary>
-        /// Удаляет выбранный пользователем экземпляр города из коллекции и записывает изменения в файл
+        /// Удаляет выбранный пользователем экземпляр города из коллекции и записывает изменения в файл.
         /// </summary>
         /// <param name="rootBasicCityInfo"></param>
         public void RemoveCityFromSavedList(RootBasicCityInfo rootBasicCityInfo)
@@ -82,7 +82,7 @@ namespace WeatherApp
         }
         /// <summary>
         /// Принимает временную коллекцию городов которую вернул поиск с сервера, пользователь числовым выбором определяет какой город 
-        /// необходимо сохранить в файл
+        /// необходимо сохранить в файл.
         /// </summary>
         /// <param name="formalListCities"></param>
         public void ShowReceivedCities(List<RootBasicCityInfo> formalListCities)
