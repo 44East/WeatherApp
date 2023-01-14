@@ -27,7 +27,7 @@ namespace WeatherApp
         /// то метод выводит погоду на 5 дней по выбранному городу.
         /// Если список городов пуст или API ключ недоступен, выводится соответствующее сообщение по каждому событию и происходит выход из метода.
         /// </summary>
-        public void GetWeatherDataFromServer(HttpWorker httpWorker)
+        public void GetWeatherDataFromServer()
         {            
             RootBasicCityInfo currentCity;
             string receivedWeatherForCurrentCity;
@@ -40,7 +40,7 @@ namespace WeatherApp
 
                 fullUrlToRequest.AppendFormat(textMessages.GetWeatherUrl, currentCity.Key, apiKey);
 
-                receivedWeatherForCurrentCity = httpWorker.GetStringFromServer(fullUrlToRequest.ToString());
+                receivedWeatherForCurrentCity = HttpWorker.GetStringFromServer(fullUrlToRequest.ToString());
 
                 rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedWeatherForCurrentCity);
 

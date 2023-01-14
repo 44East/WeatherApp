@@ -9,7 +9,6 @@ namespace WeatherApp
 {
     public class MainMenu
     {
-        private HttpWorker httpWorker;
         private ReceiverWeather receiverWeather;
         private TextMessages textMessages;
         private TextWorker textWorker;
@@ -36,8 +35,6 @@ namespace WeatherApp
             searcherCity = new SearcherCity(textMessages, textWorker, apiManager, dataRepo);
 
             receiverWeather = new ReceiverWeather(textMessages, textWorker, searcherCity, apiManager);
-
-            httpWorker = new HttpWorker();
 
             InitializeUserFiles();
             GetTheMainMenu();
@@ -75,11 +72,11 @@ namespace WeatherApp
                         var searchLanguage = ReadLine()?.Trim().ToLowerInvariant();
                         Write(textMessages.GetCityName);
                         var nameOfCity = ReadLine().Trim();
-                        searcherCity.GettingListOfCitesOnRequest(httpWorker, nameOfCity, searchLanguage);
+                        searcherCity.GettingListOfCitesOnRequest(nameOfCity, searchLanguage);
                         GetWaitAndClear();
                         break;
                     case "3":
-                        receiverWeather.GetWeatherDataFromServer(httpWorker);
+                        receiverWeather.GetWeatherDataFromServer();
                         GetWaitAndClear();
                         break;
                     case "4":

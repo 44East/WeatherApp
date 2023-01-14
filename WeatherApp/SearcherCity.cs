@@ -33,7 +33,7 @@ namespace WeatherApp
         /// </summary>
         /// <param name="cityName"></param>
         /// <param name="searchLanguage"></param>
-        public void GettingListOfCitesOnRequest(HttpWorker httpWorker, string cityName, string searchLanguage)
+        public void GettingListOfCitesOnRequest(string cityName, string searchLanguage)
         {
             StringBuilder fullUrlToRequest = new StringBuilder();   
             try
@@ -42,7 +42,7 @@ namespace WeatherApp
 
                 fullUrlToRequest.AppendFormat(textMessages.SearchCityUrl, apiKey, cityName, searchLanguage);
 
-                string prepareString = httpWorker.GetStringFromServer(fullUrlToRequest.ToString());
+                string prepareString = HttpWorker.GetStringFromServer(fullUrlToRequest.ToString());
 
                 List<RootBasicCityInfo> rbci = JsonSerializer.Deserialize<List<RootBasicCityInfo>>(prepareString);
                 if (rbci.Count == 0)
