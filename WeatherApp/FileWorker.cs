@@ -43,7 +43,7 @@ namespace WeatherApp
         /// <returns></returns>
         private async Task CreateFileAsync(string fileName)
         {
-            int bufferSize = 2 << 12;//4096 bytes, it's default buffer size in FileStream.
+            int bufferSize = 2 << 11;//4096 bytes, it's default buffer size in FileStream.
             await using var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + fileName, 
                                                 FileMode.Create, 
                                                 FileAccess.Write, 
