@@ -23,14 +23,12 @@ namespace WeatherApp
         /// <returns></returns>
         public List<T> ReadFileFromLocalDisk(string fileName)
         {
-            JsonSerializerOptions jsOptions = new JsonSerializerOptions();
-            jsOptions.IgnoreReadOnlyProperties = true;
             try
             {
                 using StreamReader sr = new StreamReader(fileName);
                 var prepareString = sr.ReadToEnd();
 
-                return JsonSerializer.Deserialize<List<T>>(prepareString, jsOptions);
+                return JsonSerializer.Deserialize<List<T>>(prepareString);
             }
             catch(FileNotFoundException ex)
             {
@@ -45,7 +43,13 @@ namespace WeatherApp
         /// <returns></returns>
         private async Task CreateFileAsync(string fileName)
         {
-            await using var file = File.Create(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName));
+            int bufferSize = 2 << 12;//4096 bytes, it's default buffer size in FileStream.
+            await using var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + fileName, 
+                                                FileMode.Create, 
+                                                FileAccess.Write, 
+                                                FileShare.None, 
+                                                bufferSize, 
+                                                FileOptions.Asynchronous);                                                
         }        
         /// <summary>
         /// Записывает полученную коллекцию от вызывающего кода в необходимое название файла.

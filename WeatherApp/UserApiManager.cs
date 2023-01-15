@@ -78,7 +78,7 @@ namespace WeatherApp
             }
             catch (FileNotFoundException ex)
             {
-                textWorker.ShowTheText(textMessages.ApiFileDoesntExist);
+                textWorker.ShowTheText(textMessages.ApiIsEmpty);
                 textWorker.ShowTheText(ex.Message);
             }
             catch (Exception ex)
