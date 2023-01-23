@@ -19,7 +19,8 @@ namespace WeatherApp
         {
             try
             {
-                using StreamReader sr = new StreamReader(fileName);
+                FileInfo fileInfo = new FileInfo(fileName);
+                using StreamReader sr = fileInfo.OpenText();
                 var prepareString = sr.ReadToEnd();
 
                 return JsonSerializer.Deserialize<List<T>>(prepareString);
@@ -38,7 +39,7 @@ namespace WeatherApp
         private async Task CreateFileAsync(string fileName)
         {
             int bufferSize = 2 << 11;//4096 bytes, it's default buffer size in FileStream.
-            await using var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + fileName, 
+            await using var fs = new FileStream(fileName, 
                                                 FileMode.Create, 
                                                 FileAccess.Write, 
                                                 FileShare.None, 
@@ -52,11 +53,9 @@ namespace WeatherApp
         /// <param name="fileName"></param>
         public void WriteFileToLocalStorage(List<T> currList, string fileName)
         {
-            using (StreamWriter sw = new StreamWriter(fileName, false))
-            {
-                Stream stream = sw.BaseStream;
-                JsonSerializer.Serialize(stream, currList);
-            }
+            FileInfo fileInfo = new FileInfo(fileName);
+            using FileStream fs = fileInfo.OpenWrite();
+            JsonSerializer.Serialize(fs, currList);
         }        
 
     }

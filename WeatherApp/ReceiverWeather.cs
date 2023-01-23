@@ -36,7 +36,7 @@ namespace WeatherApp
                 fullUrlToRequest.AppendFormat(textMessages.GetWeatherUrl, currentCity.Key, apiKey);
 
                 receivedWeatherForCurrentCity = HttpWorker.GetStringFromServer(fullUrlToRequest.ToString());
-
+                
                 rootWeather = JsonSerializer.Deserialize<RootWeather>(receivedWeatherForCurrentCity);
 
                 textWorker.ShowWeatherInCurrentCity(currentCity, rootWeather);
